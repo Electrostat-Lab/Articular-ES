@@ -2,7 +2,7 @@
 An entity component system (ECS) framework providing good articulations between component objects and game entities in a user-friendly way featuring both the legacy template pattern with the added power of the DI pattern.
 
 ## Provisional Class Paradigm:
-- [ ] `articular.core.Entity`: represents a game entity articulating some game components.
+- [x] `articular.core.Entity`: represents a game entity articulating some game components.
 > Provisional Code:
 > ```java
 > /**
@@ -20,7 +20,7 @@ An entity component system (ECS) framework providing good articulations between 
 >    }
 > }
 > ```
-- [ ] `articular.core.component.Component`: represents a game component to be utilized by a game entity.
+- [x] `articular.core.component.Component`: represents a game component to be utilized by a game entity.
 > Provisional Code:
 > ```java
 > /**
@@ -40,7 +40,7 @@ An entity component system (ECS) framework providing good articulations between 
 >    }
 > }
 > ```
-- [ ] `articular.core.ArticulationManager`: manages the articulations between Game Entities and entities' components.
+- [x] `articular.util.ArticulationManager`: manages the articulations between Game Entities and entities' components.
 > Provisional Code:
 > ```java
 > public class ArticulationManager<E, C> {
