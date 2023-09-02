@@ -1,5 +1,5 @@
 # <img src="https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/6d7d9ff3-60f9-476e-85aa-686ca4330b7f" width=120 height=120/> Articular-ES
-An entity component system (ECS) framework provides good articulations between component objects and game entities in a user-friendly way featuring both the legacy template pattern with the added power of the DI pattern.
+An entity component system (ECS) framework that provides good articulations between component objects and game entities in a user-friendly way featuring both the legacy template pattern with the added power of the DI pattern.
 
 ## Provisional Class Paradigm:
 - [x] `articular.core.Entity`: represents a game entity articulating some game components.
