@@ -29,23 +29,12 @@ An entity component system (ECS) framework providing good articulations between 
 >  *
 >  * @author pavl_g
 >  */ 
-> public abstract class Component<E, I> {
->    protected final Component.Id componentId;
->    protected final E entity;
-> 
->    public Component(Component.Id componentId, E entity) {
->       this.componentId = componentId;
->       this.entity = entity; 
->    }
->    public E getEntity() {
->        return this.entity;
->    }
+> public interface Component<E, I> {
+>    E getEntity();
 >
->    public abstract void update(I input);
+>    void update(I input);
 > 
->    public Component.Id getId() {
->        return this.componentId;
->    }
+>    Component.Id getId();
 >
 >    public static final record Id(Object id) {
 >    }
