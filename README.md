@@ -52,3 +52,27 @@ An entity component system (ECS) framework providing good articulations between 
 > }
 > ```
 - [ ] `articular.core.ArticulationManager`: manages the articulation between Game Entities and entities' components.
+> Provisional Code:
+> ```java
+> public class ArticulationManager<E, C> {
+>   protected final Map<String, E> entities;
+>
+>   public ArticulationManager() {
+>       this.entities = new HashMap<>();
+>   }
+>
+>   public void register(E entity) {
+>       
+>   }
+>
+>   public void unregister(E entity) {
+>   }
+>
+>   public void register(E entity, C component) {
+>     entity.getComponents().put(component.getComponentId().id(), component);
+> }
+>
+> public void unregister(E entity, C component) {
+>   entity.getComponents().remove(component.getComponentId().id());
+> }
+> }
