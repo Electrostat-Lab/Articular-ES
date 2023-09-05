@@ -10,7 +10,7 @@ import articular.core.component.Component;
  *
  * @author pavl_g
  */
-public class ConcurrentArticulationManager extends ArticulationManager {
+public class ConcurrentArticulationManager<I> extends ArticulationManager<I> {
 
     /**
      * Instantiates a thread-safe ECS manager.
@@ -20,27 +20,27 @@ public class ConcurrentArticulationManager extends ArticulationManager {
     }
 
     @Override
-    public synchronized void register(Entity entity) {
+    public synchronized void register(Entity<I> entity) {
         super.register(entity);
     }
 
     @Override
-    public synchronized void register(Entity entity, Component component) {
+    public synchronized void register(Entity<I> entity, Component component) {
         super.register(entity, component);
     }
 
     @Override
-    public synchronized void unregister(Entity entity) {
+    public synchronized void unregister(Entity<I> entity) {
         super.unregister(entity);
     }
 
     @Override
-    public synchronized void unregister(Entity entity, Component component) {
+    public synchronized void unregister(Entity<I> entity, Component component) {
         super.unregister(entity, component);
     }
 
     @Override
-    public synchronized void update(Object input) {
+    public synchronized void update(I input) {
         super.update(input);
     }
 }

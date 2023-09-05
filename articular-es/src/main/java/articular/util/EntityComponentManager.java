@@ -24,12 +24,12 @@ import java.util.Map;
  *
  * @author pavl_g
  */
-public class ArticulationManager {
+public class ArticulationManager<I> {
 
     /**
      * The proposed Game entities
      */
-    protected final Map<String, Entity> entities;
+    protected final Map<String, Entity<I>> entities;
 
     /**
      * Instantiates an articulation manager object by
@@ -44,7 +44,7 @@ public class ArticulationManager {
      *
      * @param entity a game entity instance to register
      */
-    public void register(Entity entity) {
+    public void register(Entity<I> entity) {
         entities.put(entity.getName(), entity);
     }
 
@@ -53,7 +53,7 @@ public class ArticulationManager {
      *
      * @param entity a game entity instance to unregister
      */
-    public void unregister(Entity entity) {
+    public void unregister(Entity<I> entity) {
         entities.remove(entity.getName(), entity);
     }
 
@@ -63,7 +63,7 @@ public class ArticulationManager {
      * @param entity the game entity instance
      * @param component the component instance to register to this game entity
      */
-    public void register(Entity entity, Component component) {
+    public void register(Entity<I> entity, Component component) {
         entity.getComponents().put(component.getId().getId(), component);
     }
 
@@ -73,7 +73,7 @@ public class ArticulationManager {
      * @param entity the game entity instance
      * @param component the component instance to be unregistered from this game entity
      */
-    public void unregister(Entity entity, Component component) {
+    public void unregister(Entity<I> entity, Component component) {
         entity.getComponents().remove(component.getId().getId());
     }
 
@@ -82,7 +82,7 @@ public class ArticulationManager {
      *
      * @param input the game loop input value
      */
-    public void update(Object input) {
+    public void update(I input) {
         entities.forEach((key, entity) -> entity.update(input));
     }
 
@@ -91,7 +91,7 @@ public class ArticulationManager {
      *
      * @return a map of the registered game entities
      */
-    public Map<String, Entity> getEntities() {
+    public Map<String, Entity<I>> getEntities() {
         return entities;
     }
 }
