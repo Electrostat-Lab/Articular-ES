@@ -40,7 +40,7 @@ An entity component system (ECS) framework that provides good articulations betw
 >    }
 > }
 > ```
-- [x] `articular.util.ArticulationManager`: manages the articulations between Game Entities and entities' components.
+- [x] `articular.util.EntityComponentManager`: manages the articulations between Game Entities and entities' components.
 > Provisional Code:
 > ```java
 > public class ArticulationManager<E, C> {
