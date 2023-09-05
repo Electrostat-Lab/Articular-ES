@@ -29,50 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.util;
-
-import articular.core.Entity;
-import articular.core.component.Component;
-
 /**
- * A thread-safe version of the {@link EntityComponentManager} to properly
- * synchronize structural changes (addition/removal) of the map {@link EntityComponentManager#getEntities()}
- * with the game loop update {@link EntityComponentManager#update(Object)}.
- *
- * @param <I> the input type to the game loop pattern
- * @author pavl_g
+ * Provides framework utilities that articulate and map game components
+ * to their game entities.
  */
-public class ConcurrentEntityComponentManager<I> extends EntityComponentManager<I> {
-
-    /**
-     * Instantiates a thread-safe ECS manager.
-     */
-    public ConcurrentEntityComponentManager() {
-        super();
-    }
-
-    @Override
-    public synchronized void register(Entity<I> entity) {
-        super.register(entity);
-    }
-
-    @Override
-    public synchronized void register(Entity<I> entity, Component<I> component) {
-        super.register(entity, component);
-    }
-
-    @Override
-    public synchronized void unregister(Entity<I> entity) {
-        super.unregister(entity);
-    }
-
-    @Override
-    public synchronized void unregister(Entity<I> entity, Component<I> component) {
-        super.unregister(entity, component);
-    }
-
-    @Override
-    public synchronized void update(I input) {
-        super.update(input);
-    }
-}
+package articular.util;

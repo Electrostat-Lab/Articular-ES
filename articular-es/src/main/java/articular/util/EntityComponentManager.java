@@ -1,3 +1,34 @@
+/*
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice, this
+ *    list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. Neither the name of the copyright holder nor the names of its
+ *    contributors may be used to endorse or promote products derived from
+ *    this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package articular.util;
 
 import articular.core.Entity;
@@ -14,7 +45,7 @@ import java.util.Map;
  * </p>
  *
  * <p>
- * This is utility is not thread-safe.
+ * This utility is not thread-safe.
  * </p>
  *
  * <p>
@@ -22,20 +53,21 @@ import java.util.Map;
  * to the game loop.
  * </p>
  *
+ * @param <I> the input type to the game loop pattern
  * @author pavl_g
  */
-public class ArticulationManager<I> {
+public class EntityComponentManager<I> {
 
     /**
      * The proposed Game entities
      */
-    protected final Map<String, Entity<I>> entities;
+    protected Map<String, Entity<I>> entities;
 
     /**
      * Instantiates an articulation manager object by
      * initializing a {@link HashMap} of game {@link Entity}s.
      */
-    public ArticulationManager() {
+    public EntityComponentManager() {
         this.entities = new HashMap<>();
     }
 
@@ -63,8 +95,8 @@ public class ArticulationManager<I> {
      * @param entity the game entity instance
      * @param component the component instance to register to this game entity
      */
-    public void register(Entity<I> entity, Component component) {
-        entity.getComponents().put(component.getId().getId(), component);
+    public void register(Entity<I> entity, Component<I> component) {
+        entity.getComponents().put(component.getId().longValue(), component);
     }
 
     /**
@@ -73,8 +105,8 @@ public class ArticulationManager<I> {
      * @param entity the game entity instance
      * @param component the component instance to be unregistered from this game entity
      */
-    public void unregister(Entity<I> entity, Component component) {
-        entity.getComponents().remove(component.getId().getId());
+    public void unregister(Entity<I> entity, Component<I> component) {
+        entity.getComponents().remove(component.getId().longValue());
     }
 
     /**
