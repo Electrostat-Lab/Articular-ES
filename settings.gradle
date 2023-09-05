@@ -9,3 +9,4 @@
 
 rootProject.name = 'Articular-ES'
 include('articular-es')
+include('articular-monkey')
