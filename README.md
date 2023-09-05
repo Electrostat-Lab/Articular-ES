@@ -4,14 +4,14 @@ An entity component system (ECS) framework that provides good articulations betw
 ## Provisional Class Paradigm:
 - [x] `articular.core.Entity`: represents a game entity articulating some game components.
 > Provisional Code:
-> ```java
+> ```java 
 > /**
->  * @param <C> the type of game components.
+>  * @param <I> the type of the game loop input.
 >  * 
 >  * @author pavl_g
 >  */ 
-> public interface Entity<C, I> {
->    Map<Component.Id, C> getComponents();
+> public interface Entity<I> extends Component<I> {
+>    Map<? super Number, Component<I> getComponents();
 >    default C getComponent(Component.Id id) {
 >      return getComponents().get(id);
 >    }
@@ -24,45 +24,44 @@ An entity component system (ECS) framework that provides good articulations betw
 > Provisional Code:
 > ```java
 > /**
->  * @param <E> the type of game entity encapsulating this component.
 >  * @param <I> the type of the game loop input.
 >  *
 >  * @author pavl_g
 >  */ 
-> public interface Component<E, I> {
->    E getEntity();
+> public interface Component<I> {
+>    Entity getEntity();
 >
 >    void update(I input);
 > 
 >    Component.Id getId();
 >
->    public static final record Id(Object id) {
+>    public static final record Id(long id) {
 >    }
 > }
 > ```
 - [x] `articular.util.EntityComponentManager`: manages the articulations between Game Entities and entities' components.
 > Provisional Code:
 > ```java
-> public class ArticulationManager<E, C> {
->   protected final Map<String, E> entities;
+> public class EntityComponentManager<I> {
+>   protected final Map<String, Entity> entities;
 >
 >   public ArticulationManager() {
 >       this.entities = new HashMap<>();
 >   }
 >
->   public void register(E entity) {
+>   public void register(Entity<I> entity) {
 >       entities.put(entity.getName(), entity);
 >   }
 >
->   public void unregister(E entity) {
+>   public void unregister(Entity<I> entity) {
 >       entities.remove(entity.getName(), entity);
 >   }
 >
->   public void register(E entity, C component) {
+>   public void register(Entity<I> entity, Component<I> component) {
 >     entity.getComponents().put(component.getComponentId().id(), component);
 >   }
 >
->   public void unregister(E entity, C component) {
+>   public void unregister(Entity<I> entity, Component<I> component) {
 >     entity.getComponents().remove(component.getComponentId().id());
 >   }
 > }
