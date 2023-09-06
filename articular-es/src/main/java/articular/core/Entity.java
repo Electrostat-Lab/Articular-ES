@@ -46,17 +46,16 @@ import java.util.Collection;
  * A Map of components must be provided via a DI pattern.
  * </p>
  *
- * @param <T> the type of the game component objects
  * @author pavl_g
  */
-public interface Entity<T> extends Component<T> {
+public interface Entity extends Component {
 
     /**
      * A Collection of game entity components to be provided.
      *
      * @return a collection of game entity's components
      */
-    Collection<Component<T>> getComponents();
+    Collection<Component> getComponents();
 
     /**
      * Retrieves a game entity's component by its identifier.
@@ -64,7 +63,7 @@ public interface Entity<T> extends Component<T> {
      * @param id the component identifier
      * @return a game entity component or a game sub-entity
      */
-    Component<T> getComponent(Component.Id id);
+    Component getComponent(Component.Id id);
 
     /**
      * Retrieves the name of this entity.
