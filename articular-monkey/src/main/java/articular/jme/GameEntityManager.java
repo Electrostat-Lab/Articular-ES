@@ -48,7 +48,7 @@ public class GameEntityManager<T> extends BaseAppState {
     /**
      * The ECS manager controlling the game entities and their components.
      */
-    protected EntityComponentManager<T, Float> entityComponentManager;
+    protected EntityComponentManager<Float> entityComponentManager;
 
     /**
      * Instantiates a game entity manager with a {@link ConcurrentEntityComponentManager} as a default
@@ -63,7 +63,7 @@ public class GameEntityManager<T> extends BaseAppState {
      *
      * @param entityComponentManager a user-defined implementation for the entityComponentManager
      */
-    public GameEntityManager(EntityComponentManager<T, Float> entityComponentManager) {
+    public GameEntityManager(EntityComponentManager<Float> entityComponentManager) {
         this.entityComponentManager = entityComponentManager;
     }
 
@@ -104,7 +104,7 @@ public class GameEntityManager<T> extends BaseAppState {
      *
      * @return the game entity-component manager for this state
      */
-    public EntityComponentManager<T, Float> getEntityComponentManager() {
+    public EntityComponentManager<Float> getEntityComponentManager() {
         return entityComponentManager;
     }
 }
