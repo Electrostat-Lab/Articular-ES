@@ -32,7 +32,9 @@
 package articular.util;
 
 import articular.core.Entity;
+import articular.core.UpdatableEntity;
 import articular.core.component.Component;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,15 +55,16 @@ import java.util.Map;
  * to the game loop.
  * </p>
  *
- * @param <I> the input type to the game loop pattern
+ * @param <T> the type of the game component data
+ * @param <I> the type of the input to the game loop
  * @author pavl_g
  */
-public class EntityComponentManager<I> {
+public class EntityComponentManager<T, I> {
 
     /**
      * The proposed Game entities
      */
-    protected Map<String, Entity<I>> entities;
+    protected Map<? super Number, Entity<T>> entities;
 
     /**
      * Instantiates an articulation manager object by
@@ -76,8 +79,8 @@ public class EntityComponentManager<I> {
      *
      * @param entity a game entity instance to register
      */
-    public void register(Entity<I> entity) {
-        entities.put(entity.getName(), entity);
+    public void register(StandardGameEntity<T> entity) {
+        entities.put(entity.getId().longValue(), entity);
     }
 
     /**
@@ -85,8 +88,8 @@ public class EntityComponentManager<I> {
      *
      * @param entity a game entity instance to unregister
      */
-    public void unregister(Entity<I> entity) {
-        entities.remove(entity.getName(), entity);
+    public void unregister(StandardGameEntity<T> entity) {
+        entities.remove(entity.getId().longValue(), entity);
     }
 
     /**
@@ -95,8 +98,8 @@ public class EntityComponentManager<I> {
      * @param entity the game entity instance
      * @param component the component instance to register to this game entity
      */
-    public void register(Entity<I> entity, Component<I> component) {
-        entity.getComponents().put(component.getId().longValue(), component);
+    public void register(StandardGameEntity<T> entity, Component<T> component) {
+        entity.getComponentsMap().put(component.getId().longValue(), component);
     }
 
     /**
@@ -105,8 +108,8 @@ public class EntityComponentManager<I> {
      * @param entity the game entity instance
      * @param component the component instance to be unregistered from this game entity
      */
-    public void unregister(Entity<I> entity, Component<I> component) {
-        entity.getComponents().remove(component.getId().longValue());
+    public void unregister(StandardGameEntity<T> entity, Component<T> component) {
+        entity.getComponentsMap().remove(component.getId().longValue());
     }
 
     /**
@@ -115,15 +118,19 @@ public class EntityComponentManager<I> {
      * @param input the game loop input value
      */
     public void update(I input) {
-        entities.forEach((key, entity) -> entity.update(input));
+        entities.forEach((key, entity) -> {
+            if (entity instanceof UpdatableEntity) {
+                ((UpdatableEntity<T, I>) entity).update(input);
+            }
+        });
     }
 
     /**
      * Retrieves the registered game entities.
      *
-     * @return a map of the registered game entities
+     * @return a collection of the registered game entities
      */
-    public Map<String, Entity<I>> getEntities() {
-        return entities;
+    public Collection<Entity<T>> getEntities() {
+        return entities.values();
     }
 }
