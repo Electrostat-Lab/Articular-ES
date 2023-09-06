@@ -33,30 +33,37 @@ package articular.util;
 
 import articular.core.Entity;
 import articular.core.component.Component;
-import articular.util.EntityComponentManager;
-
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Defines a base implementation for the {@link Entity}, the container
+ * Defines a standard base implementation for the {@link Entity}, the container
  * object of the articular-es API.
  *
- * @param <T> the type of the game component object
+ * @param <T> the type of the game components' data
  * @author pavl_g
  */
-public abstract class BaseGameEntity<T> implements Entity<T> {
+public abstract class StandardGameEntity<T> implements Entity<T> {
 
     /**
-     * The name for this entity utilized by the
-     * {@link EntityComponentManager}.
+     * The name for this entity (nullable).
      */
     protected String name;
 
     /**
-     * A map for the Game entity components registered to this entity.
+     * A map for the game components registered to this entity.
      */
     protected final Map<? super Number, Component<T>> components;
+
+    /**
+     * Instantiates a default game entity with a {@link HashMap}.
+     *
+     * @param name the name of this game entity (nullable)
+     */
+    public StandardGameEntity(String name) {
+        this(name, new HashMap<>());
+    }
 
     /**
      * Instantiates a game entity with a name and game entity components.
@@ -66,10 +73,10 @@ public abstract class BaseGameEntity<T> implements Entity<T> {
      * provide a call to this constructor or an acceptable alternative.
      * </p>
      *
-     * @param name the name of this game entity
-     * @param components a map of game entity components
+     * @param name the name of this game entity (nullable)
+     * @param components a map of game entity components (nullable)
      */
-    public BaseGameEntity(String name, Map<? super Number, Component<T>> components) {
+    public StandardGameEntity(String name, Map<? super Number, Component<T>> components) {
         this.name = name;
         this.components = components;
     }
@@ -85,15 +92,23 @@ public abstract class BaseGameEntity<T> implements Entity<T> {
     }
 
     /**
-     * Retrieves a specific game entity component by its identifier.
+     * Retrieves a specific an entity component by its identifier.
      *
      * @param id the game entity component identifier
      * @return a game entity component or null if it doesn't exist (nullable)
      */
-    Component<T> getComponent(Component.Id id) {
+    @Override
+    public Component<T> getComponent(Component.Id id) {
         return components.get(id);
     }
 
+    /**
+     * Retrieves components of this entity mapped by their identifiers.
+     *
+     * @see StandardGameEntity#getComponent(Id)
+     * @see StandardGameEntity#getComponents()
+     * @return a map of game components registered to this entity
+     */
     protected Map<? super Number, Component<T>> getComponentsMap() {
         return components;
     }
