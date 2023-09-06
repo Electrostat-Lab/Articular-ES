@@ -41,10 +41,9 @@ import java.util.Map;
  * Defines a standard base implementation for the {@link Entity}, the container
  * object of the articular-es API.
  *
- * @param <T> the type of the game components' data
  * @author pavl_g
  */
-public abstract class StandardGameEntity<T> implements Entity<T> {
+public abstract class StandardGameEntity implements Entity {
 
     /**
      * The name for this entity (nullable).
@@ -54,7 +53,7 @@ public abstract class StandardGameEntity<T> implements Entity<T> {
     /**
      * A map for the game components registered to this entity.
      */
-    protected final Map<? super Number, Component<T>> components;
+    protected final Map<? super Number, Component> components;
 
     /**
      * Instantiates a default game entity with a {@link HashMap}.
@@ -76,7 +75,7 @@ public abstract class StandardGameEntity<T> implements Entity<T> {
      * @param name the name of this game entity (nullable)
      * @param components a map of game entity components (nullable)
      */
-    public StandardGameEntity(String name, Map<? super Number, Component<T>> components) {
+    public StandardGameEntity(String name, Map<? super Number, Component> components) {
         this.name = name;
         this.components = components;
     }
@@ -87,7 +86,7 @@ public abstract class StandardGameEntity<T> implements Entity<T> {
     }
 
     @Override
-    public Collection<Component<T>> getComponents() {
+    public Collection<Component> getComponents() {
         return components.values();
     }
 
@@ -98,7 +97,7 @@ public abstract class StandardGameEntity<T> implements Entity<T> {
      * @return a game entity component or null if it doesn't exist (nullable)
      */
     @Override
-    public Component<T> getComponent(Component.Id id) {
+    public Component getComponent(Component.Id id) {
         return components.get(id);
     }
 
@@ -109,7 +108,7 @@ public abstract class StandardGameEntity<T> implements Entity<T> {
      * @see StandardGameEntity#getComponents()
      * @return a map of game components registered to this entity
      */
-    protected Map<? super Number, Component<T>> getComponentsMap() {
+    protected Map<? super Number, Component> getComponentsMap() {
         return components;
     }
 }
