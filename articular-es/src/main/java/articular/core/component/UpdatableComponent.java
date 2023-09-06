@@ -34,45 +34,28 @@ package articular.core.component;
 import articular.core.Entity;
 
 /**
- * Provides a base implementation to the game entity {@link Component},
- * in which each component will have a game entity instance and an identifier.
+ * A template representing a game updatable data component (mutable data component).
  *
- * @param <I> the input type to the game loop pattern
+ * @param <T> the type of the mutable component object
+ * @param <I> the input type of the update loop
  * @author pavl_g
  */
-public abstract class BaseGameComponent<I> implements Component<I> {
+public interface UpdatableComponent<T, I> extends Component<T> {
 
     /**
-     * The enclosing game entity that will update
-     * this component.
-     */
-    protected final Entity<I> entity;
-
-    /**
-     * The component identifier that maps this component
-     * to its game entity.
-     */
-    protected final Component.Id componentId;
-
-    /**
-     * Instantiates a new game entity component object.
+     * Updates this game component with an abstract input.
      *
-     * @param entity the entity enclosing this game component
-     * @param componentId the game component identifier to map this component
-     *                    to its game entity
+     * <p>
+     * Override this method and use the Game loop pattern to link the
+     * original game states to this component via the game {@link Entity}s.
+     * </p>
+     *
+     * <p>
+     * This method is dispatched by {@link articular.core.UpdatableEntity#update(I)} )},
+     * never call it manually!
+     * </p>
+     *
+     * @param input an input to perform the update on
      */
-    public BaseGameComponent(Entity<I> entity, Component.Id componentId) {
-        this.entity = entity;
-        this.componentId = componentId;
-    }
-
-    @Override
-    public Entity<I> getEntity() {
-        return entity;
-    }
-
-    @Override
-    public Id getId() {
-        return componentId;
-    }
+    void update(I input);
 }
