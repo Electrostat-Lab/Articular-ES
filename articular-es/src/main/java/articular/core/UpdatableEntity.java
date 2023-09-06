@@ -31,52 +31,26 @@
 
 package articular.core;
 
-import articular.core.component.Component;
-import articular.util.EntityComponentManager;
-import java.util.Map;
+import articular.core.component.UpdatableComponent;
 
 /**
- * Defines a base implementation for the {@link Entity}, the container
- * object of the articular-es API.
+ * Provides an update logic for the game entity.
  *
- * @param <I> the type of the input to the game loop pattern
+ * @param <T> the type of game components' data
+ * @param <I> the type of the input to the game loop (used by the update method)
  */
-public abstract class BaseGameEntity<I> implements Entity<I> {
+public interface UpdatableEntity<T, I> extends Entity<T> {
 
     /**
-     * The name for this entity utilized by the
-     * {@link EntityComponentManager}.
-     */
-    protected String name;
-
-    /**
-     * A map for the Game entity components registered to this entity.
-     */
-    protected final Map<? super Number, Component<I>> components;
-
-    /**
-     * Instantiates a game entity with a name and game entity components.
+     * Updates this game entity through updating its components.
      *
-     * <p>
-     * Subclasses overriding the default constructor should
-     * provide a call to this constructor or an acceptable alternative.
-     * </p>
-     *
-     * @param name the name of this game entity
-     * @param components a map of game entity components
+     * @param input the input to the game loop pattern
      */
-    public BaseGameEntity(String name, Map<? super Number, Component<I>> components) {
-        this.name = name;
-        this.components = components;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public Map<? super Number, Component<I>> getComponents() {
-        return components;
+    default void update(I input) {
+        getComponents().forEach((component) -> {
+            if (component instanceof UpdatableComponent) {
+                ((UpdatableComponent<T, I>) component).update(input);
+            }
+        });
     }
 }

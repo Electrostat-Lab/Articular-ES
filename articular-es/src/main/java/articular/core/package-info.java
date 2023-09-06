@@ -31,6 +31,6 @@
 
 /**
  * Provides the core Game Entity interface {@link articular.core.Entity}
- * and its base implementation {@link articular.core.BaseGameEntity}.
+ * and its base implementation {@link articular.util.StandardGameEntity}.
  */
 package articular.core;
