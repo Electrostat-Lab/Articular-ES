@@ -31,7 +31,6 @@
 
 package articular.util;
 
-import articular.core.Entity;
 import articular.core.component.Component;
 
 /**
@@ -39,10 +38,11 @@ import articular.core.component.Component;
  * synchronize structural changes (addition/removal) of the map {@link EntityComponentManager#getEntities()}
  * with the game loop update {@link EntityComponentManager#update(Object)}.
  *
+ * @param <T> the type of the game component data
  * @param <I> the input type to the game loop pattern
  * @author pavl_g
  */
-public class ConcurrentEntityComponentManager<I> extends EntityComponentManager<I> {
+public class ConcurrentEntityComponentManager<T, I> extends EntityComponentManager<T, I> {
 
     /**
      * Instantiates a thread-safe ECS manager.
@@ -52,22 +52,22 @@ public class ConcurrentEntityComponentManager<I> extends EntityComponentManager<
     }
 
     @Override
-    public synchronized void register(Entity<I> entity) {
+    public synchronized void register(StandardGameEntity<T> entity) {
         super.register(entity);
     }
 
     @Override
-    public synchronized void register(Entity<I> entity, Component<I> component) {
+    public synchronized void register(StandardGameEntity<T> entity, Component<T> component) {
         super.register(entity, component);
     }
 
     @Override
-    public synchronized void unregister(Entity<I> entity) {
+    public synchronized void unregister(StandardGameEntity<T> entity) {
         super.unregister(entity);
     }
 
     @Override
-    public synchronized void unregister(Entity<I> entity, Component<I> component) {
+    public synchronized void unregister(StandardGameEntity<T> entity, Component<T> component) {
         super.unregister(entity, component);
     }
 
