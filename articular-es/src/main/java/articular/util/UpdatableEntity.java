@@ -31,25 +31,37 @@
 
 package articular.core;
 
+import articular.core.component.Component;
 import articular.core.component.UpdatableComponent;
+import articular.util.StandardGameEntity;
+
+import java.util.Map;
 
 /**
  * Provides an update logic for the game entity.
  *
- * @param <T> the type of game components' data
  * @param <I> the type of the input to the game loop (used by the update method)
  */
-public interface UpdatableEntity<T, I> extends Entity<T> {
+public abstract class UpdatableEntity<I> extends StandardGameEntity {
+
+    public UpdatableEntity(String name) {
+        super(name);
+    }
+
+    public UpdatableEntity(String name, Map<? super Number, Component> components) {
+        super(name, components);
+    }
 
     /**
      * Updates this game entity through updating its components.
      *
      * @param input the input to the game loop pattern
      */
+    @SuppressWarnings("unchecked")
     default void update(I input) {
         getComponents().forEach((component) -> {
             if (component instanceof UpdatableComponent) {
-                ((UpdatableComponent<T, I>) component).update(input);
+                ((UpdatableComponent<I>) component).update(input);
             }
         });
     }

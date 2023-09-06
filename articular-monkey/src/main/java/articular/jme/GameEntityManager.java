@@ -40,15 +40,32 @@ import com.jme3.app.state.BaseAppState;
  * Binds the {@link EntityComponentManager} to a jMonkeyEngine {@link BaseAppState}
  * in a game environment.
  *
+ * @param <T> the type of the game components' data
  * @author pavl_g
  */
-public class GameEntityManager extends BaseAppState {
+public class GameEntityManager<T> extends BaseAppState {
 
     /**
      * The ECS manager controlling the game entities and their components.
      */
-    protected EntityComponentManager<Float> entityComponentManager =
-                                                new ConcurrentEntityComponentManager<>();
+    protected EntityComponentManager<T, Float> entityComponentManager;
+
+    /**
+     * Instantiates a game entity manager with a {@link ConcurrentEntityComponentManager} as a default
+     * implementation.
+     */
+    public GameEntityManager() {
+        this(new ConcurrentEntityComponentManager<>());
+    }
+
+    /**
+     * Instantiates a game entity manager with a user-defined implementation.
+     *
+     * @param entityComponentManager a user-defined implementation for the entityComponentManager
+     */
+    public GameEntityManager(EntityComponentManager<T, Float> entityComponentManager) {
+        this.entityComponentManager = entityComponentManager;
+    }
 
     @Override
     protected void initialize(Application app) {
@@ -87,7 +104,7 @@ public class GameEntityManager extends BaseAppState {
      *
      * @return the game entity-component manager for this state
      */
-    public EntityComponentManager<Float> getEntityComponentManager() {
+    public EntityComponentManager<T, Float> getEntityComponentManager() {
         return entityComponentManager;
     }
 }
