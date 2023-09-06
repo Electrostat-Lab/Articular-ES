@@ -32,15 +32,15 @@
 package articular.core.component;
 
 import articular.core.Entity;
+import articular.util.UpdatableEntity;
 
 /**
  * A template representing a game updatable data component (mutable data component).
  *
- * @param <T> the type of the mutable component object
  * @param <I> the input type of the update loop
  * @author pavl_g
  */
-public interface UpdatableComponent<T, I> extends Component<T> {
+public interface UpdatableComponent<I> extends Component {
 
     /**
      * Updates this game component with an abstract input.
@@ -51,7 +51,7 @@ public interface UpdatableComponent<T, I> extends Component<T> {
      * </p>
      *
      * <p>
-     * This method is dispatched by {@link articular.core.UpdatableEntity#update(I)} )},
+     * This method is dispatched by {@link UpdatableEntity#update(I)} )},
      * never call it manually!
      * </p>
      *

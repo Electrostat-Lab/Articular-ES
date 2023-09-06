@@ -35,10 +35,9 @@ package articular.core.component;
  * Provides a standard implementation to the game entity {@link Component},
  * in which a component will have an identifier and should have immutable data.
  *
- * @param <T> a boundary type for the immutable data objects
  * @author pavl_g
  */
-public class StandardGameComponent<T> implements Component<T> {
+public class StandardGameComponent implements Component {
 
     /**
      * The component identifier that maps this component

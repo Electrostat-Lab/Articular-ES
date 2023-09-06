@@ -38,11 +38,10 @@ import java.lang.reflect.Field;
 /**
  * A template representing a Game {@link Entity} housing data objects.
  *
- * @param <T> the type of the component object data in memory
  * @author pavl_g
  */
 @SuppressWarnings("unchecked")
-public interface Component<T> {
+public interface Component {
 
     /**
      * Retrieves all the declared fields in an array of {@link Field}.
@@ -56,12 +55,13 @@ public interface Component<T> {
     /**
      * Retrieves a data field by its name in a field pointer.
      *
+     * @param <T> the type of the component object data in memory
      * @param fieldName the field name in the component class
      * @return a reference object to the required field
      * @throws NoSuchFieldException if the submitted field is not found in this component
      * @throws IllegalAccessException if the field is inaccessible by means of private access modifiers
      */
-    default T getData(String fieldName) throws NoSuchFieldException, IllegalAccessException {
+    default <T> T getData(String fieldName) throws NoSuchFieldException, IllegalAccessException {
         return (T) getClass().getDeclaredField(fieldName).get(this);
     }
 
