@@ -32,104 +32,171 @@
 package articular.util;
 
 import articular.core.Entity;
+import articular.core.Type;
 import articular.core.component.Component;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import articular.core.system.*;
 
 /**
- * The Entity Component System (ECS) Manager manages the articulation (linkage) between game entities
- * and game entities' components.
  *
- * <p>
- * This utility is optional to use, it helps in writing good applications.
- * </p>
- *
- * <p>
- * This utility is not thread-safe.
- * </p>
- *
- * <p>
- * This utility is best used as a composited object inside a Game Engine State class registered
- * to the game loop.
- * </p>
- *
- * @param <I> the type of the input to the game loop
+ * @param <I>
  * @author pavl_g
  */
 public class EntityComponentManager<I> {
 
     /**
-     * The proposed Game entities
+     * A Collection of game entity components to be provided mapped
+     * by their types.
      */
-    protected Map<? super Number, Entity> entities;
+    protected Type.SystemMap systems = new Type.SystemMap();
 
     /**
-     * Instantiates an articulation manager object by
-     * initializing a {@link HashMap} of game {@link Entity}s.
+     * Instantiates an articulation manager object.
      */
     public EntityComponentManager() {
-        this.entities = new HashMap<>();
+    }
+
+    public Type.EntityMap getSystemComponents(SystemController systemController) {
+        return systems.get(systemController.getAssociatedSystem());
     }
 
     /**
-     * Registers a game entity to this game articulation manager.
+     * Retrieves the entity components in a particular system.
      *
-     * @param entity a game entity instance to register
+     * @param systemController the system
+     * @param entity           the entity
+     * @return a map of components in a system-entity
      */
-    public void register(StandardGameEntity entity) {
-        entities.put(entity.getId().longValue(), entity);
+    public Type.ComponentMap getEntityComponents(SystemController systemController, Entity entity) {
+        Type.EntityMap systemComponents = getSystemComponents(systemController);
+        Validator.validate(systemComponents, systemController);
+        return systemComponents.get(entity.getId().intValue());
+    }
+
+    public Component getEntityComponent(SystemController systemController, Entity entity,
+                                        Component.Id componentId) {
+        Type.ComponentMap entityComponents = getEntityComponents(systemController, entity);
+        Validator.validate(entityComponents, entity);
+        return entityComponents.get(componentId.intValue());
+    }
+
+    public Entity createEntity(SystemController systemController, String name) {
+        return createEntity(new SystemController[]{ systemController }, name);
+    }
+
+    public Entity createEntity(SystemController[] systemControllers, String name) {
+        final Entity entity = new Entity(name);
+        for (SystemController systemController : systemControllers) {
+            Type.EntityMap entityMap = systems.get(systemController.getAssociatedSystem());
+            Validator.validate(entityMap, systemController);
+            entityMap.put(entity.getId().intValue(), new Type.ComponentMap());
+        }
+        return entity;
     }
 
     /**
-     * Unregisters a game entity to this game articulation manager.
+     * Registers a component under an entity to a system.
      *
-     * @param entity a game entity instance to unregister
+     * @param component        the component to register
+     * @param entity           the entity under which the component will be registered
+     * @param systemController the system to which the entity resides holding the system
+     *                         components
      */
-    public void unregister(StandardGameEntity entity) {
-        entities.remove(entity.getId().longValue(), entity);
+    public void register(Component component, Entity entity, SystemController systemController) {
+        getEntityComponents(systemController, entity).put(component.getId().intValue(), component);
     }
 
     /**
-     * Registers a game entity component to a game entity.
+     * Attaches an entity to a controller-associated system.
      *
-     * @param entity the game entity instance
-     * @param component the component instance to register to this game entity
+     * @param entity           the entity
+     * @param systemController the controller to use its associated system
      */
-    public void register(StandardGameEntity entity, Component component) {
-        entity.getComponentsMap().put(component.getId().longValue(), component);
+    public void attachEntity(Entity entity, SystemController systemController) {
+        Type.EntityMap entityMap = getSystemComponents(systemController);
+        Validator.validate(entityMap, systemController);
+        entityMap.put(entity.getId().intValue(), new Type.ComponentMap());
     }
 
     /**
-     * Unregisters a game entity component from a game entity.
+     * Attaches an entity to multiple controllers-associated systems.
      *
-     * @param entity the game entity instance
-     * @param component the component instance to be unregistered from this game entity
+     * @param entity            the entity to be attached to the systems
+     * @param systemControllers the systems to attach the entity to
      */
-    public void unregister(StandardGameEntity entity, Component component) {
-        entity.getComponentsMap().remove(component.getId().longValue());
+    public void attachEntity(Entity entity, SystemController... systemControllers) {
+        for (SystemController systemController : systemControllers) {
+            attachEntity(entity, systemController);
+        }
     }
 
     /**
-     * Updates the registered game entities and their components.
+     * Attaches a controller-associated system, successive
+     * calls will replace previous objects.
      *
-     * @param input the game loop input value
+     * @param systemController the system controller to retrieve the associated system
      */
-    @SuppressWarnings("unchecked")
-    public void update(I input) {
-        entities.forEach((key, entity) -> {
-            if (entity instanceof UpdatableEntity) {
-                ((UpdatableEntity<I>) entity).update(input);
-            }
-        });
+    public void attachAssociatedSystem(SystemController systemController) {
+        systems.put(systemController.getAssociatedSystem(), new Type.EntityMap());
     }
 
     /**
-     * Retrieves the registered game entities.
+     * Tests whether a controller-associated system is attached.
      *
-     * @return a collection of the registered game entities
+     * @param systemController the controller to get its associated system
+     * @return true if the controller-associated system is attached, false otherwise
      */
-    public Collection<Entity> getEntities() {
-        return entities.values();
+    public boolean hasSystemComponents(SystemController systemController) {
+        return getSystemComponents(systemController) != null;
+    }
+
+    /**
+     * Tests whether an entity is present in a controller-associated system.
+     *
+     * @param systemController
+     * @param entity
+     * @return
+     */
+    public boolean hasEntityComponents(SystemController systemController, Entity entity) {
+        return getEntityComponents(systemController, entity) != null;
+    }
+
+    public boolean hasEntityComponent(SystemController systemController, Entity entity,
+                                      Component component) {
+        Component component1 = getEntityComponent(systemController, entity, component.getId());
+        return component1 != null && component1 == component;
+    }
+
+    /**
+     * Forwards all systems to a single dispatch.
+     *
+     * @param systemsUpdater the system representing the dispatch source
+     * @param input          the input of the game loop
+     */
+    public void updateSystems(SystemsUpdater<I> systemsUpdater, I input) {
+        systemsUpdater.update(systems, this, input);
+    }
+
+    /**
+     * Forwards a system entities to a single dispatch.
+     *
+     * @param updater the system that holds the components in an entity (aka. ID)
+     * @param input   the input of the game loop
+     */
+    public void updateSystemEntities(SystemEntitiesUpdater<I> updater, I input) {
+        Type.EntityMap entityMap = systems.get(updater.getAssociatedSystem());
+        updater.update(entityMap, this, input);
+    }
+
+    /**
+     * Forwards the system components in an entity to a component updater.
+     *
+     * @param updater the controller that holds the components in an entity (aka. ID)
+     * @param entity  the entity or the ID under which the components are stored
+     * @param input   the input of the game loop
+     */
+    public void updateSystemComponents(ComponentsUpdater<I> updater, Entity entity, I input) {
+        Type.ComponentMap componentMap = systems.get(updater.getAssociatedSystem())
+                .get(entity.getId().intValue());
+        updater.update(componentMap, entity, this, input);
     }
 }

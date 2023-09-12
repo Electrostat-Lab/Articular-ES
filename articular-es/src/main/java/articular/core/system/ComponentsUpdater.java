@@ -29,33 +29,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.component;
+package articular.core.system;
 
 import articular.core.Entity;
-import articular.util.UpdatableEntity;
+import articular.core.Type;
+import articular.util.EntityComponentManager;
 
 /**
- * A template representing a game updatable data component (mutable data component).
+ * Specialized System providing entity component-component
+ * interactions
  *
- * @param <I> the input type of the update loop
- * @author pavl_g
+ * @param <I>
  */
-public interface UpdatableComponent<I> extends Component {
-
-    /**
-     * Updates this game component with an abstract input.
-     *
-     * <p>
-     * Override this method and use the Game loop pattern to link the
-     * original game states to this component via the game {@link Entity}s.
-     * </p>
-     *
-     * <p>
-     * This method is dispatched by {@link UpdatableEntity#update(I)} )},
-     * never call it manually!
-     * </p>
-     *
-     * @param input an input to perform the update on
-     */
-    void update(I input);
+public interface ComponentsUpdater<I> extends SystemController {
+    void update(Type.ComponentMap componentMap, Entity entity,
+                EntityComponentManager<I> entityComponentManager, I input);
 }

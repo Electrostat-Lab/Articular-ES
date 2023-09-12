@@ -79,14 +79,14 @@ public interface Component {
      * a constant long value to accommodate larger number of game entity components.
      */
     public static final class Id extends Number {
-        private final long id;
+        private final int id;
 
         /**
          * Instantiates a game entity component identifier object.
          *
          * @param id the identifier in long format
          */
-        public Id(final long id) {
+        public Id(final int id) {
             this.id = id;
         }
 
@@ -96,26 +96,26 @@ public interface Component {
          * @return the component identifier in longs
          */
         @Override
-        public long longValue() {
+        public int intValue() {
             return id;
         }
 
         @Deprecated
         @Override
-        public int intValue() {
-            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#longValue()\"");
+        public long longValue() {
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
         }
 
         @Deprecated
         @Override
         public float floatValue() {
-            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#longValue()\"");
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
         }
 
         @Deprecated
         @Override
         public double doubleValue() {
-            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#longValue()\"");
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
         }
     }
 }

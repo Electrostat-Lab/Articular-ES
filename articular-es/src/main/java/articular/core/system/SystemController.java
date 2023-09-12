@@ -29,33 +29,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.component;
+package articular.core.system;
 
 /**
- * Provides a standard implementation to the game entity {@link Component},
- * in which a component will have an identifier and should have immutable data.
+ * The base system interface that provides different
+ * types of interactions.
  *
  * @author pavl_g
+ * @see ComponentsUpdater for an entity component-component interactions in a single system
+ * @see SystemsUpdater for system-system interactions
+ * @see SystemEntitiesUpdater for entity-entity interactions in a single system
  */
-public class StandardGameComponent implements Component {
+public interface SystemController {
 
     /**
-     * The component identifier that maps this component
-     * to its game entity.
-     */
-    protected final Component.Id componentId;
-
-    /**
-     * Instantiates a new game entity component object.
+     * Retrieves the name of the associated system.
      *
-     * @param componentId the game component identifier
+     * @return the name in string format
      */
-    public StandardGameComponent(Component.Id componentId) {
-        this.componentId = componentId;
-    }
-
-    @Override
-    public final Id getId() {
-        return componentId;
-    }
+    String getAssociatedSystem();
 }
