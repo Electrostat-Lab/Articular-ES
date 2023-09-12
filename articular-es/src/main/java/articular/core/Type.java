@@ -29,33 +29,25 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.component;
+package articular.core;
+
+import articular.core.component.Component;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Provides a standard implementation to the game entity {@link Component},
- * in which a component will have an identifier and should have immutable data.
+ * Defines aliases for types.
  *
  * @author pavl_g
  */
-public class StandardGameComponent implements Component {
-
-    /**
-     * The component identifier that maps this component
-     * to its game entity.
-     */
-    protected final Component.Id componentId;
-
-    /**
-     * Instantiates a new game entity component object.
-     *
-     * @param componentId the game component identifier
-     */
-    public StandardGameComponent(Component.Id componentId) {
-        this.componentId = componentId;
+public final class Type {
+    public static class SystemMap extends ConcurrentHashMap<String, EntityMap> {
     }
 
-    @Override
-    public final Id getId() {
-        return componentId;
+    public static class EntityMap extends ConcurrentHashMap<Number, ComponentMap> {
+    }
+
+    public static class ComponentMap extends ConcurrentHashMap<Number, Component> {
     }
 }
+
+

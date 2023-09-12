@@ -29,33 +29,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.component;
+package articular.throwable;
 
-/**
- * Provides a standard implementation to the game entity {@link Component},
- * in which a component will have an identifier and should have immutable data.
- *
- * @author pavl_g
- */
-public class StandardGameComponent implements Component {
+import articular.core.component.Component;
+
+public class ComponentIdNotUniqueException extends RuntimeException {
 
     /**
-     * The component identifier that maps this component
-     * to its game entity.
-     */
-    protected final Component.Id componentId;
-
-    /**
-     * Instantiates a new game entity component object.
+     * Instantiates a component uniqueness exception with an identifier object.
      *
-     * @param componentId the game component identifier
+     * @param identifier the component identifier
      */
-    public StandardGameComponent(Component.Id componentId) {
-        this.componentId = componentId;
-    }
-
-    @Override
-    public final Id getId() {
-        return componentId;
+    public ComponentIdNotUniqueException(Component.Id identifier) {
+        super("Component Identifier " + identifier + " already exists in this identity!");
     }
 }

@@ -29,49 +29,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.util;
+package articular.core.system;
 
-import articular.core.component.Component;
+import articular.core.Type;
+import articular.util.EntityComponentManager;
 
 /**
- * A thread-safe version of the {@link EntityComponentManager} to properly
- * synchronize structural changes (addition/removal) of the map {@link EntityComponentManager#getEntities()}
- * with the game loop update {@link EntityComponentManager#update(Object)}.
+ * A higher-order implementation of the {@link SystemController} that
+ * provides a method for system-based interactions.
  *
- * @param <I> the input type to the game loop pattern
+ * @param <I> the type of the game loop input
  * @author pavl_g
  */
-public class ConcurrentEntityComponentManager<I> extends EntityComponentManager<I> {
+public interface SystemsUpdater<I> extends SystemController {
 
     /**
-     * Instantiates a thread-safe ECS manager.
+     * Dispatched each frame to provide system-based interactions
+     * for the user applications.
+     *
+     * @param systemMap the systems map
+     * @param entityComponentManager the associated entity-component manager
+     * @param input the input from the game loop
      */
-    public ConcurrentEntityComponentManager() {
-        super();
-    }
-
-    @Override
-    public synchronized void register(StandardGameEntity entity) {
-        super.register(entity);
-    }
-
-    @Override
-    public synchronized void register(StandardGameEntity entity, Component component) {
-        super.register(entity, component);
-    }
-
-    @Override
-    public synchronized void unregister(StandardGameEntity entity) {
-        super.unregister(entity);
-    }
-
-    @Override
-    public synchronized void unregister(StandardGameEntity entity, Component component) {
-        super.unregister(entity, component);
-    }
-
-    @Override
-    public synchronized void update(I input) {
-        super.update(input);
-    }
+    void update(Type.SystemMap systemMap, EntityComponentManager<I> entityComponentManager, I input);
 }

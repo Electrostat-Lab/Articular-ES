@@ -32,43 +32,20 @@
 package articular.core;
 
 import articular.core.component.Component;
-import java.util.Collection;
 
 /**
- * Represents a game entity with some {@link Component}s.
- *
- * <p>
- * A game entity is considered also a game component object,
- * this fact provides a pattern to implement sub-entities.
- * </p>
- *
- * <p>
- * A Map of components must be provided via a DI pattern.
- * </p>
- *
  * @author pavl_g
  */
-public interface Entity extends Component {
+public final class Entity implements Component {
 
-    /**
-     * A Collection of game entity components to be provided.
-     *
-     * @return a collection of game entity's components
-     */
-    Collection<Component> getComponents();
+    protected final String name;
 
-    /**
-     * Retrieves a game entity's component by its identifier.
-     *
-     * @param id the component identifier
-     * @return a game entity component or a game sub-entity
-     */
-    Component getComponent(Component.Id id);
+    public Entity(String name) {
+        this.name = name;
+    }
 
-    /**
-     * Retrieves the name of this entity.
-     *
-     * @return the name of this entity (nullable)
-     */
-    String getName();
+    @Override
+    public Id getId() {
+        return new Component.Id((name.hashCode() >>> 16) ^ name.hashCode());
+    }
 }
