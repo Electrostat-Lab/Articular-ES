@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+node "Articular-ES <<An Entity-Component-System Framework>>" {
+    package "com.articular.core"
+    package "com.articular.util"
+}
+
+package "com.articular.core" {
+    [MemoryMap] <<interface>> #AD7FA8
+    [SystemController] <<interface>> #FCAF3E
+    [EntityComponentManager] <<manager>> #729FCF
+    [CacheManager] <<manager>> #729FCF
+    [EntityComponentManager] --(0 MemoryMap : requires
+    [CacheManager] --(0 MemoryMap : requires
+    [EntityComponentManager] --(0 SystemController : ===delegates
+
+    node "SystemControllers" #FCAF3E {
+        [SystemsUpdater] <<controller>>
+        [ComponentsUpdater] <<controller>>
+        [SystemEntitiesUpdater] <<controller>>
+
+        [SystemsUpdater] --|> [SystemController]
+        [ComponentsUpdater] --|> [SystemController]
+        [SystemEntitiesUpdater] --|> [SystemController]
+    }
+
+    node "Dependencies" #BABDB6 {
+        (System) <<string-id>>
+        [Component] <<component>>
+        [Entity] <<entity/id>>
+
+        [MemoryMap] ..> [Component]
+        [MemoryMap] ..> [Entity]
+        [MemoryMap] ..> (System)
+        [SystemController] --0 (System) : provides
+    }
+
+    node "MemoryMaps" #AD7FA8 {
+        [SystemMap] <<memorymap>>
+        [EntityComponentMap] <<memorymap>>
+        [SystemComponentMap] <<memorymap>>
+        [CacheMap] <<memorymap>>
+
+        [MemoryMap] <|-- [SystemMap]
+        [MemoryMap] <|-- [EntityComponentMap]
+        [MemoryMap] <|-- [SystemComponentMap]
+        [MemoryMap] <|-- [CacheMap]
+    }
+}
+
+package "com.articular.util" {
+    [Validator] <<utility>>
+    [Validatable] <<interface>>
+    [ArticularManager] <<manager>> #729FCF
+    [ArticularManager] --|> [EntityComponentManager] : extends
+    [ArticularManager] *--> [CacheManager] : composites
+}
+
+@enduml
