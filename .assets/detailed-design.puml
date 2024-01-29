@@ -1,0 +1,154 @@
+@startuml
+'https://plantuml.com/class-diagram
+'#: for protected fields
+'-: for private fields
+'+: for public fields
+
+interface Validateable {
+}
+interface MemoryMap #AD7FA8 {
+}
+interface SystemManager #729FCF {
+    === Type-param<P extends MemoryMap, S extends MemoryMap, C extends Validatable>
+    + void register(Entity, Component, SystemController)
+    + S allocateMemoryMap(C)
+    + Component allocateComponent(Entity, SystemController)
+    + Component getComponent(Entity, SystemController)
+    + P getPrimaryMemoryMap()
+    + S getSecondaryMemoryMap(C)
+    + boolean hasComponent(Entity, SystemController)
+    + boolean hasMemoryMap(C)
+}
+interface SystemController #FCAF3E {
+    + String getAssociatedSystem();
+}
+interface Component #888A85 {
+    + Field[] getData()
+    + <<T>> T getData(String)
+}
+
+class CacheManager <<Entity-[system]-component>> #729FCF {
+    # boolean enableCaching = true
+    + boolean isEnableCaching()
+    + void setEnableCaching(boolean enableCaching)
+    + void register(Entity, Component, SystemController)
+    + void register(Entity, MemoryMap.SystemComponentMap)
+    + MemoryMap.SystemComponentMap allocateMemoryMap(Entity)
+    + Component allocateComponent(Entity, SystemController)
+    + Component getComponent(Entity, SystemController)
+    + MemoryMap.CacheMap getPrimaryMemoryMap()
+    + MemoryMap.SystemComponentMap getSecondaryMemoryMap(Entity
+    + boolean hasComponent(Entity, SystemController)
+    + boolean hasMemoryMap(Entity)
+}
+
+class EntityComponentManager <<System-[entity]-component>> #729FCF {
+    ===Type-param<I>
+    + void register(Entity, Component, SystemController)
+    + MemoryMap.EntityComponentMap allocateMemoryMap(SystemController)
+    + Component allocateComponent(Entity, SystemController)
+    + Component getComponent(Entity, SystemController)
+    + MemoryMap.SystemMap getPrimaryMemoryMap()
+    + MemoryMap.EntityComponentMap getSecondaryMemoryMap(SystemController)
+    + boolean hasComponent(Entity, SystemController)
+    + boolean hasMemoryMap(SystemController)
+    + Entity createEntity(SystemController, String)
+    + Entity createEntity(SystemController[], String)
+    + boolean hasSystemComponents(SystemController)
+    + boolean hasEntityComponent(SystemController, Entity)
+    + boolean hasSameComponent(SystemController, Entity, Component)
+    + void updateSystems(SystemsUpdater<I>, I)
+    + void updateSystemComponents(SystemEntitiesUpdater<I>, I)
+    + void updateEntityComponents(ComponentsUpdater<I>, Entity, I)
+}
+
+class ArticularManager #729FCF {
+    ===Type-param<I>
+    + CacheManager getCacheManager()
+    + void updateEntityComponents(ComponentsUpdater<I>, Entity, I)
+    + void register(SystemController, MemoryMap.EntityComponentMap)
+    + void register(Entity, Component, SystemController)
+    + Component allocateComponent(Entity, SystemController)
+}
+
+interface ComponentsUpdater #FCAF3E {
+    ===Type-param<I>
+    + void update(MemoryMap.SystemComponentMap, Entity, EntityComponentManager<I>, I)
+}
+
+interface SystemEntitiesUpdater #FCAF3E {
+    ===Type-param<I>
+    + void update(MemoryMap.EntityComponentMap, EntityComponentManager<I>, I)
+}
+
+interface SystemsUpdater #FCAF3E {
+    ===Type-param<I>
+    + void update(MemoryMap.SystemMap, EntityComponentManager<I>, I)
+}
+
+class SystemMap #AD7FA8 {
+    = ConcurrentHashMap<<String, EntityComponentMap>>
+}
+
+class EntityComponentMap #AD7FA8 {
+    = ConcurrentHashMap<<Number, Component>>
+}
+
+class SystemComponentMap #AD7FA8 {
+    = ConcurrentHashMap<<String, Component>>
+}
+
+class CacheMap #AD7FA8 {
+    = ConcurrentHashMap<<Number, SystemComponentMap>>
+}
+
+class AssociatedObjectNotFoundException {
+    # final Validator.Message validatorMessage
+    + Validator.Message validatorMessage getValidatorMessage()
+}
+
+class Validator <<utility>> {
+    + static void validate(Validatable, Message)
+}
+
+class Entity <<entity>> #888A85 {
+    - String name
+    + Id getId()
+}
+
+Validateable <|.. Entity
+
+Validateable <|.. CacheManager
+Validateable <|.. EntityComponentManager
+
+Validateable <|.. Component
+Validateable <|.. ComponentsUpdater
+Validateable <|.. SystemEntitiesUpdater
+Validateable <|.. SystemsUpdater
+Validateable <|.. MemoryMap
+Validateable <|.. SystemsUpdater
+
+EntityComponentManager *--> SystemMap : systemMap
+ArticularManager *--> CacheManager : cacheManager
+CacheManager *--> CacheMap : cacheMap
+ConcurrentHashMap <|-- SystemMap
+ConcurrentHashMap <|-- EntityComponentMap
+ConcurrentHashMap <|-- SystemComponentMap
+ConcurrentHashMap <|-- CacheMap
+RuntimeException <|-- AssociatedObjectNotFoundException
+
+MemoryMap <|.. SystemMap
+MemoryMap <|.. EntityComponentMap
+MemoryMap <|.. SystemComponentMap
+MemoryMap <|.. CacheMap
+
+SystemManager <|.. CacheManager
+SystemManager <|.. EntityComponentManager
+
+SystemController <|-- ComponentsUpdater
+SystemController <|-- SystemEntitiesUpdater
+SystemController <|-- SystemsUpdater
+
+EntityComponentManager <|-- ArticularManager
+
+@enduml

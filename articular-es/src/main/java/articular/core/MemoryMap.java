@@ -29,33 +29,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.component;
+package articular.core;
+
+import articular.core.component.Component;
+import articular.core.system.manager.EntityComponentManager;
+import articular.util.Validatable;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Provides a standard implementation to the game entity {@link Component},
- * in which a component will have an identifier and should have immutable data.
+ * Defines aliases for types. A {@link SystemMap} encloses the
+ * systems; each system groups some components in a {@link EntityComponentMap}
+ * by their {@link Entity#getId()}; which represents entities.
  *
  * @author pavl_g
+ * @see Component
+ * @see Entity
+ * @see EntityComponentManager
  */
-public class StandardGameComponent implements Component {
+public final class MemoryMap {
 
     /**
-     * The component identifier that maps this component
-     * to its game entity.
+     * Defines a group of systems (repositories) to group some data (components)
+     * and manipulate activities through them.
      */
-    protected final Component.Id componentId;
-
-    /**
-     * Instantiates a new game entity component object.
-     *
-     * @param componentId the game component identifier
-     */
-    public StandardGameComponent(Component.Id componentId) {
-        this.componentId = componentId;
+    public static final class SystemMap extends ConcurrentHashMap<String, EntityComponentMap> implements Validatable {
     }
 
-    @Override
-    public final Id getId() {
-        return componentId;
+    /**
+     * Defines a group of components mapped by their IDs which can be derived
+     * from the {@link Entity} class.
+     */
+    public static final class EntityComponentMap extends ConcurrentHashMap<Number, Component> implements Validatable {
+    }
+
+    public static final class SystemComponentMap extends ConcurrentHashMap<String, Component> implements Validatable {
+    }
+
+    public static final class CacheMap extends ConcurrentHashMap<Number, SystemComponentMap> implements Validatable {
     }
 }
+
+
