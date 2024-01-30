@@ -29,20 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.system;
-
-import articular.core.Entity;
-import articular.core.MemoryMap;
-import articular.core.system.manager.EntityComponentManager;
-
 /**
- * Specialized System providing entity component-component
- * interactions
+ * The entry point to the articular-es providing interactions
+ * between components and systems in several memory layouts.
  *
- * @param <I>
- * @author pavl_g
+ * @see articular.core.system.manager.EntityComponentManager EntityComponentManager - for system-[entity]-component interactions,
+ * in which components are grouped around their respective systems using the ID field from the entity, in this
+ * architecture; the entities act as identifier providers.
+ * @see articular.core.system.manager.CacheManager CacheManager - for entity-[system]-component interactions,
+ * in which components are grouped around their entities using the associated system name, in this architecture;
+ * the associated system name acts as the identifier provider for the hash key compression.
+ * @see articular.util.ArticularManager ArticularManager - for a collective usage.
  */
-public interface ComponentsUpdater<I> extends SystemController {
-    void update(MemoryMap.SystemComponentMap components, Entity entity,
-                EntityComponentManager<I> entityComponentManager, I input);
-}
+package articular.core.system.manager;
