@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,8 +31,8 @@
 
 package articular.core.system;
 
-import articular.core.Type;
-import articular.util.EntityComponentManager;
+import articular.core.MemoryMap;
+import articular.core.system.manager.EntityComponentManager;
 
 /**
  * A higher-order implementation of the {@link SystemController} that
@@ -47,9 +47,9 @@ public interface SystemsUpdater<I> extends SystemController {
      * Dispatched each frame to provide system-based interactions
      * for the user applications.
      *
-     * @param systemMap the systems map
+     * @param systemMap              the systems map
      * @param entityComponentManager the associated entity-component manager
-     * @param input the input from the game loop
+     * @param input                  the input from the game loop
      */
-    void update(Type.SystemMap systemMap, EntityComponentManager<I> entityComponentManager, I input);
+    void update(MemoryMap.SystemMap systemMap, EntityComponentManager<I> entityComponentManager, I input);
 }

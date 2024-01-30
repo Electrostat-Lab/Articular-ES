@@ -29,20 +29,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.core.system;
+package articular.core.system.manager;
 
 import articular.core.Entity;
 import articular.core.MemoryMap;
-import articular.core.system.manager.EntityComponentManager;
+import articular.core.component.Component;
+import articular.core.system.SystemController;
+import articular.util.Validatable;
 
-/**
- * Specialized System providing entity component-component
- * interactions
- *
- * @param <I>
- * @author pavl_g
- */
-public interface ComponentsUpdater<I> extends SystemController {
-    void update(MemoryMap.SystemComponentMap components, Entity entity,
-                EntityComponentManager<I> entityComponentManager, I input);
+public interface SystemManager<P extends MemoryMap, S extends MemoryMap, C extends Validatable> extends Validatable {
+    void register(C substrate, S memoryMap);
+
+    void register(Entity entity, Component component, SystemController systemController);
+
+    S allocateMemoryMap(C substrate);
+
+    Component allocateComponent(Entity entity, SystemController systemController);
+
+    Component getComponent(Entity entity, SystemController systemController);
+
+    P getPrimaryMemoryMap();
+
+    S getSecondaryMemoryMap(C substrate);
+
+    boolean hasComponent(Entity entity, SystemController systemController);
+
+    boolean hasMemoryMap(C substrate);
 }

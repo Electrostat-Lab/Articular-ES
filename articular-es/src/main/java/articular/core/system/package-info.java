@@ -30,19 +30,3 @@
  */
 
 package articular.core.system;
-
-import articular.core.Entity;
-import articular.core.MemoryMap;
-import articular.core.system.manager.EntityComponentManager;
-
-/**
- * Specialized System providing entity component-component
- * interactions
- *
- * @param <I>
- * @author pavl_g
- */
-public interface ComponentsUpdater<I> extends SystemController {
-    void update(MemoryMap.SystemComponentMap components, Entity entity,
-                EntityComponentManager<I> entityComponentManager, I input);
-}

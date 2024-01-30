@@ -29,15 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.util;
+package articular.core.system.manager;
 
 import articular.core.Entity;
-import articular.core.Type;
+import articular.core.MemoryMap;
 import articular.core.component.Component;
 import articular.core.system.ComponentsUpdater;
 import articular.core.system.SystemController;
 import articular.core.system.SystemEntitiesUpdater;
 import articular.core.system.SystemsUpdater;
+import articular.util.Validator;
 import java.util.Objects;
 
 /**
@@ -50,91 +51,23 @@ import java.util.Objects;
  * @see CacheManager for entity-system-component layouting
  * @see SystemController for instantiating systems
  */
-public class EntityComponentManager<I> implements SystemManager {
+public class EntityComponentManager<I> implements SystemManager<MemoryMap.SystemMap, MemoryMap.EntityComponentMap, SystemController> {
 
-    /**
-     * A Collection of game entity components to be provided mapped
-     * by their types.
-     */
-    protected Type.SystemMap systems = new Type.SystemMap();
+    protected MemoryMap.SystemMap systems = new MemoryMap.SystemMap();
 
-    /**
-     *
-     */
-    protected CacheManager cacheManager = new CacheManager();
-
-    /**
-     * Instantiates an articulation manager object.
-     */
     public EntityComponentManager() {
     }
 
-    public Type.EntityComponentMap getSystemComponents(SystemController systemController) {
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        return systems.get(systemController.getAssociatedSystem());
-    }
-
-    public Component getEntityComponent(SystemController systemController, Entity entity) {
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        Type.EntityComponentMap components = getSystemComponents(systemController);
-        Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
-        return components.get(entity.getId().intValue());
-    }
-
-    /**
-     * Attaches a controller-associated system, successive
-     * calls will replace previous objects.
-     *
-     * @param systemController the system controller to retrieve the associated system
-     */
-    public void attachAssociatedSystem(SystemController systemController) {
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        systems.put(systemController.getAssociatedSystem(), new Type.EntityComponentMap());
-
-        if (!cacheManager.isEnableCaching()) {
-            return;
-        }
-        // not supported! (limited mental model)
-        // cannot cache to the [?][system](component) layout; missing entity
-    }
-
-    /**
-     * Allocates a new empty component under this entity to a controller-associated system.
-     * A dispatch to this method creates a new initialized memory of type {@link Component} under
-     * the id {@link Entity#getId()}.
-     *
-     * @param entity           the entity to use its identifier
-     * @param systemController the controller to use its associated system
-     */
-    public void allocateComponent(Entity entity, SystemController systemController) {
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        final Type.EntityComponentMap components = getSystemComponents(systemController);
-        Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
-        final Component component = new Component() {};
-        components.put(entity.getId().intValue(), component);
-
-        if (!cacheManager.isEnableCaching()) {
-            return;
-        }
-        // cache to the [entity][system](component) layout
-        cacheManager.register(entity, component, systemController);
-    }
-
-    /**
-     * Allocates new components under different systems.
-     *
-     * @param entity            the entity to be attached to the systems
-     * @param systemControllers the systems to attach the entity to
-     * @see EntityComponentManager#allocateComponent(Entity, SystemController)
-     */
-    public void allocateComponent(Entity entity, SystemController... systemControllers) {
-        for (SystemController systemController : systemControllers) {
-            allocateComponent(entity, systemController);
-        }
+    @Override
+    public Component allocateComponent(Entity entity, SystemController systemController) {
+        final Component component = new Component() {
+        };
+        register(entity, component, systemController);
+        return component;
     }
 
     public Entity createEntity(SystemController systemController, String name) {
-        return createEntity(new SystemController[]{ systemController }, name);
+        return createEntity(new SystemController[]{systemController}, name);
     }
 
     public Entity createEntity(SystemController[] systemControllers, String name) {
@@ -146,69 +79,69 @@ public class EntityComponentManager<I> implements SystemManager {
         return entity;
     }
 
-    /**
-     * Registers a component under an entity to a system.
-     *
-     * @param entity           the entity under which the component will be registered
-     * @param component        the component to register
-     * @param systemController the system to which the entity resides holding the system
-     *                         components
-     */
+    @Override
+    public Component getComponent(Entity entity, SystemController systemController) {
+        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
+        MemoryMap.EntityComponentMap components = getSecondaryMemoryMap(systemController);
+        Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
+        return components.get(entity.getId().intValue());
+    }
+
+    @Override
+    public MemoryMap.SystemMap getPrimaryMemoryMap() {
+        return systems;
+    }
+
+    @Override
+    public MemoryMap.EntityComponentMap getSecondaryMemoryMap(SystemController systemController) {
+        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
+        return systems.get(systemController.getAssociatedSystem());
+    }
+
+    @Override
+    public boolean hasComponent(Entity entity, SystemController systemController) {
+        return getComponent(entity, systemController) != null;
+    }
+
+    @Override
+    public boolean hasMemoryMap(SystemController systemController) {
+        return getSecondaryMemoryMap(systemController) != null;
+    }
+
+    @Override
+    public void register(SystemController systemController, MemoryMap.EntityComponentMap memoryMap) {
+        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
+        systems.put(systemController.getAssociatedSystem(), memoryMap);
+    }
+
     @Override
     public void register(Entity entity, Component component, SystemController systemController) {
         Validator.validate(component, Validator.Message.COMPONENT_NOT_FOUND);
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        getSystemComponents(systemController).put(entity.getId().intValue(), component);
-
-        if (!cacheManager.isEnableCaching()) {
-            return;
-        }
-        // cache to the [entity][system](component) layout
-        cacheManager.register(entity, component, systemController);
+        getSecondaryMemoryMap(systemController).put(entity.getId().intValue(), component);
     }
 
-    /**
-     * Tests whether a controller-associated system is attached.
-     *
-     * @param systemController the controller to get its associated system
-     * @return true if the controller-associated system is attached, false otherwise
-     */
+    @Override
+    public MemoryMap.EntityComponentMap allocateMemoryMap(SystemController systemController) {
+        final MemoryMap.EntityComponentMap components = new MemoryMap.EntityComponentMap();
+        register(systemController, components);
+        return components;
+    }
+
     public boolean hasSystemComponents(SystemController systemController) {
-        return getSystemComponents(systemController) != null;
+        return getSecondaryMemoryMap(systemController) != null;
     }
 
-    /**
-     * Asserts whether an entity under a specific system is existing.
-     *
-     * @param systemController the controller to retrieve the associated system
-     * @param entity the entity to retrieve the component
-     * @return
-     */
     public boolean hasEntityComponent(SystemController systemController, Entity entity) {
-        return getEntityComponent(systemController, entity) != null;
+        return getComponent(entity, systemController) != null;
     }
 
-    /**
-     * Asserts whether a system would have the same component object under
-     * a specific entity.
-     *
-     * @param systemController
-     * @param entity
-     * @param component
-     * @return
-     */
     public boolean hasSameComponent(SystemController systemController, Entity entity,
-                                      Component component) {
-        Component component1 = getEntityComponent(systemController, entity);
+                                    Component component) {
+        Component component1 = getComponent(entity, systemController);
         return component1 != null && component1 == component;
     }
 
-    /**
-     * Forwards all systems to a single dispatch.
-     *
-     * @param updater the dispatch source (not null)
-     * @param input          the input of the game loop (nullable)
-     */
     public void updateSystems(SystemsUpdater<I> updater, I input) {
         Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         updater.update(systems, this, input);
@@ -216,7 +149,7 @@ public class EntityComponentManager<I> implements SystemManager {
 
     public void updateSystemComponents(SystemEntitiesUpdater<I> updater, I input) {
         Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        Type.EntityComponentMap components = systems.get(updater.getAssociatedSystem());
+        MemoryMap.EntityComponentMap components = systems.get(updater.getAssociatedSystem());
         Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
         updater.update(components, this, input);
     }
@@ -224,16 +157,10 @@ public class EntityComponentManager<I> implements SystemManager {
     public void updateEntityComponents(ComponentsUpdater<I> updater, Entity entity, I input) {
         Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        if (!cacheManager.isEnableCaching()) {
-            // do a realtime manipulation every time, Omega notation of (n), linear CPU clock cycles
-            final Type.SystemComponentMap components = new Type.SystemComponentMap();
-            systems.forEach((associatedSystem, entityComponentMap) ->
-                    components.put(associatedSystem, getEntityComponent(updater, entity)));
-            updater.update(components, entity, this, input);
-        } else {
-            // do a manipulation from the cache, constant omega notation, single CPU clock cycles
-            // manipulate cache of the [entity][system](component) layout
-            updater.update(cacheManager.getSystemComponentMap(entity), entity, this, input);
-        }
+        // do a realtime manipulation every time, Big-O notation of (n), linear CPU clock cycles
+        final MemoryMap.SystemComponentMap components = new MemoryMap.SystemComponentMap();
+        systems.forEach((associatedSystem, entityComponentMap) ->
+                components.put(associatedSystem, getComponent(entity, updater)));
+        updater.update(components, entity, this, input);
     }
 }
