@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,6 +34,7 @@ package articular.core;
 import articular.core.component.Component;
 import articular.core.system.manager.EntityComponentManager;
 import articular.util.Validatable;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,26 +47,26 @@ import java.util.concurrent.ConcurrentHashMap;
  * @see Entity
  * @see EntityComponentManager
  */
-public final class MemoryMap {
+public interface MemoryMap extends Validatable {
 
     /**
      * Defines a group of systems (repositories) to group some data (components)
      * and manipulate activities through them.
      */
-    public static final class SystemMap extends ConcurrentHashMap<String, EntityComponentMap> implements Validatable {
+    final class SystemMap extends ConcurrentHashMap<String, EntityComponentMap> implements MemoryMap {
     }
 
     /**
      * Defines a group of components mapped by their IDs which can be derived
      * from the {@link Entity} class.
      */
-    public static final class EntityComponentMap extends ConcurrentHashMap<Number, Component> implements Validatable {
+    final class EntityComponentMap extends ConcurrentHashMap<Number, Component> implements MemoryMap {
     }
 
-    public static final class SystemComponentMap extends ConcurrentHashMap<String, Component> implements Validatable {
+    final class SystemComponentMap extends ConcurrentHashMap<String, Component> implements MemoryMap {
     }
 
-    public static final class CacheMap extends ConcurrentHashMap<Number, SystemComponentMap> implements Validatable {
+    final class CacheMap extends ConcurrentHashMap<Number, SystemComponentMap> implements MemoryMap {
     }
 }
 
