@@ -34,7 +34,7 @@ package articular.core.system.manager;
 import articular.core.Entity;
 import articular.core.MemoryMap;
 import articular.core.component.Component;
-import articular.core.system.ComponentsUpdater;
+import articular.core.system.ComponentUpdater;
 import articular.core.system.SystemController;
 import articular.core.system.SystemEntitiesUpdater;
 import articular.core.system.SystemsUpdater;
@@ -42,9 +42,6 @@ import articular.util.Validator;
 import java.util.Objects;
 
 /**
- * Represents the entry and the operative point of the articular-es for
- * system-entity-component manipulation as a primary layout, and entity-system-component
- * as a cache layout that is controllable via {@link CacheManager}.
  *
  * @param <I> the type of the input for the update loop
  * @author pavl_g
@@ -59,9 +56,8 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     }
 
     @Override
-    public Component allocateComponent(Entity entity, SystemController systemController) {
-        final Component component = new Component() {
-        };
+    public Component allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
+        final Component component = () -> id;
         register(entity, component, systemController);
         return component;
     }
@@ -74,7 +70,7 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
         final Entity entity = new Entity(name);
         for (SystemController systemController : Objects.requireNonNull(systemControllers)) {
             Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-            allocateComponent(entity, systemController);
+            allocateComponent(entity, systemController, entity.getId());
         }
         return entity;
     }
@@ -95,7 +91,7 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     @Override
     public MemoryMap.EntityComponentMap getSecondaryMemoryMap(SystemController systemController) {
         Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        return systems.get(systemController.getAssociatedSystem());
+        return systems.get(systemController.getAssociatedSystem().getSystemName());
     }
 
     @Override
@@ -111,14 +107,29 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     @Override
     public void register(SystemController systemController, MemoryMap.EntityComponentMap memoryMap) {
         Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        systems.put(systemController.getAssociatedSystem(), memoryMap);
+        Validator.validate(memoryMap, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
+        systems.put(systemController.getAssociatedSystem().getSystemName(), memoryMap);
+    }
+
+    @Override
+    public void unregister(SystemController systemController) {
+        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
+        systems.remove(systemController.getAssociatedSystem().getSystemName());
     }
 
     @Override
     public void register(Entity entity, Component component, SystemController systemController) {
         Validator.validate(component, Validator.Message.COMPONENT_NOT_FOUND);
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
+        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         getSecondaryMemoryMap(systemController).put(entity.getId().intValue(), component);
+    }
+
+    @Override
+    public void unregister(Entity entity, SystemController systemController) {
+        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
+        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
+        getSecondaryMemoryMap(systemController).remove(entity.getId().intValue());
     }
 
     @Override
@@ -149,12 +160,12 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
 
     public void updateSystemComponents(SystemEntitiesUpdater<I> updater, I input) {
         Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        MemoryMap.EntityComponentMap components = systems.get(updater.getAssociatedSystem());
+        MemoryMap.EntityComponentMap components = systems.get(updater.getAssociatedSystem().getSystemName());
         Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
         updater.update(components, this, input);
     }
 
-    public void updateEntityComponents(ComponentsUpdater<I> updater, Entity entity, I input) {
+    public void updateEntityComponents(ComponentUpdater<I> updater, Entity entity, I input) {
         Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
         // do a realtime manipulation every time, Big-O notation of (n), linear CPU clock cycles

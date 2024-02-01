@@ -37,22 +37,37 @@ import articular.core.component.Component;
 import articular.core.system.SystemController;
 import articular.util.Validatable;
 
-public interface SystemManager<P extends MemoryMap, S extends MemoryMap, C extends Validatable> extends Validatable {
-    void register(C substrate, S memoryMap);
+/**
+ * Represents a generic blueprint for ecs manager.
+ * The generalized behavior and structure of this
+ * class provides better encapsulation, re-usability, and
+ * extensibility.
+ *
+ * @param <P> a generic type for the primary memory map
+ * @param <S> a generic type for the secondary (second dimensional map) memory map
+ * @param <K> a generic type for the key substrate for the data values
+ * @author pavl_g
+ */
+public interface SystemManager<P extends MemoryMap, S extends MemoryMap, K extends Validatable> extends Validatable {
+    void register(K substrate, S memoryMap);
+
+    void unregister(K substrate);
 
     void register(Entity entity, Component component, SystemController systemController);
 
-    S allocateMemoryMap(C substrate);
+    void unregister(Entity entity, SystemController systemController);
 
-    Component allocateComponent(Entity entity, SystemController systemController);
+    S allocateMemoryMap(K substrate);
+
+    Component allocateComponent(Entity entity, SystemController systemController, Component.Id id);
 
     Component getComponent(Entity entity, SystemController systemController);
 
     P getPrimaryMemoryMap();
 
-    S getSecondaryMemoryMap(C substrate);
+    S getSecondaryMemoryMap(K substrate);
 
     boolean hasComponent(Entity entity, SystemController systemController);
 
-    boolean hasMemoryMap(C substrate);
+    boolean hasMemoryMap(K substrate);
 }
