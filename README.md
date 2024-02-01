@@ -1,8 +1,8 @@
 # <img src="https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/6d7d9ff3-60f9-476e-85aa-686ca4330b7f" width=120 height=120/> Articular-ES
-An entity component system (ECS) framework that provides good articulations between components
-among different systems. The API is powered by a caching system that caches data in different
+An entity component system (ECS) framework featuring strong articulations among components
+from different systems through controller interfaces. The API is powered by a caching system that enables caching data in different
 configurations. Operational interactions take place within the system manager through the controller
-objects.
+objects. The API provides a strong abstraction based on the data-centered architecture with the ability to model complex systems, such as: Human Interface Devices (HID) APIs, and language processing and translational APIs.
 
 ## Software specification:
 
