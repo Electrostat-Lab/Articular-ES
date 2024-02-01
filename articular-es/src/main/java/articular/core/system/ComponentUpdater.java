@@ -42,7 +42,7 @@ import articular.core.system.manager.EntityComponentManager;
  * @param <I>
  * @author pavl_g
  */
-public interface ComponentsUpdater<I> extends SystemController {
+public interface ComponentUpdater<I> extends SystemController {
     void update(MemoryMap.SystemComponentMap components, Entity entity,
                 EntityComponentManager<I> entityComponentManager, I input);
 }
