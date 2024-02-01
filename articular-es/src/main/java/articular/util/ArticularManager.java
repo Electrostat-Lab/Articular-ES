@@ -34,7 +34,7 @@ package articular.util;
 import articular.core.Entity;
 import articular.core.MemoryMap;
 import articular.core.component.Component;
-import articular.core.system.ComponentsUpdater;
+import articular.core.system.ComponentUpdater;
 import articular.core.system.SystemController;
 import articular.core.system.manager.CacheManager;
 import articular.core.system.manager.EntityComponentManager;
@@ -42,15 +42,14 @@ import articular.core.system.manager.EntityComponentManager;
 public class ArticularManager<I> extends EntityComponentManager<I> {
 
     protected CacheManager cacheManager = new CacheManager();
+    protected boolean enableCaching = true;
 
     @Override
-    public Component allocateComponent(Entity entity, SystemController systemController) {
-        final Component component = new Component() {
-        };
-        register(entity, new Component() {
-        }, systemController);
+    public Component allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
+        final Component component = () -> id;
+        register(entity, component, systemController);
 
-        if (!cacheManager.isEnableCaching()) {
+        if (!isEnableCaching()) {
             return component;
         }
         // cache to the [entity][system](component) layout
@@ -62,7 +61,7 @@ public class ArticularManager<I> extends EntityComponentManager<I> {
     public void register(Entity entity, Component component, SystemController systemController) {
         super.register(entity, component, systemController);
 
-        if (!cacheManager.isEnableCaching()) {
+        if (!isEnableCaching()) {
             return;
         }
         // cache to the [entity][system](component) layout
@@ -73,16 +72,28 @@ public class ArticularManager<I> extends EntityComponentManager<I> {
     public void register(SystemController systemController, MemoryMap.EntityComponentMap memoryMap) {
         super.register(systemController, memoryMap);
 
-        if (!cacheManager.isEnableCaching()) {
+        if (!isEnableCaching()) {
             return;
         }
         // cache to the [entity][system](component) layout is not supported by this method!
-        throw new UnsupportedOperationException("Operation not supported by the Articular-System CacheManager!");
+        memoryMap.forEach((number, component) -> {
+            // 1) build a memory map
+            MemoryMap.SystemComponentMap systemComponentMap;
+            if (cacheManager.getPrimaryMemoryMap().get(number) == null) {
+                systemComponentMap = new MemoryMap.SystemComponentMap();
+                cacheManager.getPrimaryMemoryMap().put(number, systemComponentMap);
+            } else {
+                systemComponentMap = cacheManager.getPrimaryMemoryMap().get(number);
+            }
+            // 2) copy data
+            systemComponentMap.put(systemController.getAssociatedSystem().getSystemName(),
+                    component);
+        });
     }
 
     @Override
-    public void updateEntityComponents(ComponentsUpdater<I> updater, Entity entity, I input) {
-        if (!cacheManager.isEnableCaching()) {
+    public void updateEntityComponents(ComponentUpdater<I> updater, Entity entity, I input) {
+        if (!isEnableCaching()) {
             super.updateEntityComponents(updater, entity, input);
             return;
         }
@@ -91,6 +102,14 @@ public class ArticularManager<I> extends EntityComponentManager<I> {
         // do a manipulation from the cache, constant omega notation, single CPU clock cycles
         // manipulate cache of the [entity][system](component) layout
         updater.update(cacheManager.getSecondaryMemoryMap(entity), entity, this, input);
+    }
+
+    public boolean isEnableCaching() {
+        return enableCaching;
+    }
+
+    public void setEnableCaching(boolean enableCaching) {
+        this.enableCaching = enableCaching;
     }
 
     public CacheManager getCacheManager() {
