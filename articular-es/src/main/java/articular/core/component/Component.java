@@ -62,6 +62,55 @@ public interface Component extends Validatable {
      * @throws IllegalAccessException if the field is inaccessible by means of private access modifiers
      */
     default <T> T getData(String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        return (T) getClass().getDeclaredField(fieldName).get(this);
+        final Field data = getClass().getDeclaredField(fieldName);
+        data.setAccessible(true);
+        return (T) data.get(this);
+    }
+
+    Component.Id getId();
+
+    /**
+     * Represents the component identifier of type number, this encapsulates
+     * a constant long value to accommodate larger number of game entity components.
+     */
+    final class Id extends Number {
+        private final int id;
+
+        /**
+         * Instantiates a game entity component identifier object.
+         *
+         * @param id the identifier in long format
+         */
+        public Id(final int id) {
+            this.id = id;
+        }
+
+        /**
+         * Retrieves the identifier in a long format.
+         *
+         * @return the component identifier in longs
+         */
+        @Override
+        public int intValue() {
+            return id;
+        }
+
+        @Deprecated
+        @Override
+        public long longValue() {
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
+        }
+
+        @Deprecated
+        @Override
+        public float floatValue() {
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
+        }
+
+        @Deprecated
+        @Override
+        public double doubleValue() {
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
+        }
     }
 }
