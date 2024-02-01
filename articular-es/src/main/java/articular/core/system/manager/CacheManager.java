@@ -35,6 +35,7 @@ import articular.core.Entity;
 import articular.core.MemoryMap;
 import articular.core.component.Component;
 import articular.core.system.SystemController;
+import articular.throwable.AssociatedObjectNotFoundException;
 import articular.util.Validator;
 
 /**
@@ -42,17 +43,8 @@ import articular.util.Validator;
  */
 public class CacheManager implements SystemManager<MemoryMap.CacheMap, MemoryMap.SystemComponentMap, Entity> {
     protected MemoryMap.CacheMap cacheMap = new MemoryMap.CacheMap();
-    protected boolean enableCaching = true;
 
     public CacheManager() {
-    }
-
-    public boolean isEnableCaching() {
-        return enableCaching;
-    }
-
-    public void setEnableCaching(boolean enableCaching) {
-        this.enableCaching = enableCaching;
     }
 
     @Override
@@ -63,12 +55,31 @@ public class CacheManager implements SystemManager<MemoryMap.CacheMap, MemoryMap
     }
 
     @Override
+    public void unregister(Entity entity) {
+        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
+        cacheMap.remove(entity.getId().intValue());
+    }
+
+    @Override
     public void register(Entity entity, Component component, SystemController systemController) {
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
         Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         Validator.validate(component, Validator.Message.COMPONENT_NOT_FOUND);
-        final MemoryMap.SystemComponentMap components = getSecondaryMemoryMap(entity);
-        components.put(systemController.getAssociatedSystem(), component);
+        MemoryMap.SystemComponentMap components = getSecondaryMemoryMap(entity);
+        try {
+            Validator.validate(components, Validator.Message.ASSOCIATED_SYSTEM_COMPONENT_MAP_NOT_FOUND);
+        } catch (AssociatedObjectNotFoundException ex) {
+            register(entity, (components = new MemoryMap.SystemComponentMap()));
+        } finally {
+            components.put(systemController.getAssociatedSystem().getSystemName(), component);
+        }
+    }
+
+    @Override
+    public void unregister(Entity entity, SystemController systemController) {
+        final MemoryMap.SystemComponentMap map = getSecondaryMemoryMap(entity);
+        Validator.validate(map, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
+        map.remove(systemController.getAssociatedSystem().getSystemName());
     }
 
     @Override
@@ -79,9 +90,8 @@ public class CacheManager implements SystemManager<MemoryMap.CacheMap, MemoryMap
     }
 
     @Override
-    public Component allocateComponent(Entity entity, SystemController systemController) {
-        final Component component = new Component() {
-        };
+    public Component allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
+        final Component component = () -> id;
         register(entity, component, systemController);
         return component;
     }
@@ -91,7 +101,7 @@ public class CacheManager implements SystemManager<MemoryMap.CacheMap, MemoryMap
         Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         final MemoryMap.SystemComponentMap components = getSecondaryMemoryMap(entity);
         Validator.validate(components, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        return components.get(systemController.getAssociatedSystem());
+        return components.get(systemController.getAssociatedSystem().getSystemName());
     }
 
     @Override
