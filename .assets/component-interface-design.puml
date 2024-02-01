@@ -15,37 +15,40 @@ package "com.articular.core" {
     [CacheManager] --(0 MemoryMap : requires
     [EntityComponentManager] --(0 SystemController : ===delegates
 
+    node "Module" <<interface>> #8AE234 {
+        [Component-A]
+        [Component-B]
+    }
+
     node "SystemControllers" #FCAF3E {
         [SystemsUpdater] <<controller>>
         [ComponentsUpdater] <<controller>>
         [SystemEntitiesUpdater] <<controller>>
 
-        [SystemsUpdater] --|> [SystemController]
-        [ComponentsUpdater] --|> [SystemController]
-        [SystemEntitiesUpdater] --|> [SystemController]
+        "SystemControllers" --|> [SystemController]
     }
 
     node "Dependencies" #BABDB6 {
-        (System) <<string-id>>
-        [Component] <<component>>
-        [Entity] <<entity/id>>
+        [ArticularSystem] <<interface>>
+        [Component] <<component>> #8AE234
+        [Entity] <<entity/id>> #8AE234
 
-        [MemoryMap] ..> [Component]
-        [MemoryMap] ..> [Entity]
-        [MemoryMap] ..> (System)
-        [SystemController] --0 (System) : provides
+        [MemoryMap] ..> "Dependencies"
+        [SystemController] --0 [ArticularSystem] : provides
+
+        [Component] <|-- [Entity]
+        [Component] <|-- [Module]
     }
 
     node "MemoryMaps" #AD7FA8 {
+        [MemoryMap] <|-- "MemoryMaps"
+
         [SystemMap] <<memorymap>>
         [EntityComponentMap] <<memorymap>>
         [SystemComponentMap] <<memorymap>>
         [CacheMap] <<memorymap>>
 
-        [MemoryMap] <|-- [SystemMap]
-        [MemoryMap] <|-- [EntityComponentMap]
-        [MemoryMap] <|-- [SystemComponentMap]
-        [MemoryMap] <|-- [CacheMap]
+        [EntityComponentMap] <-- [Module] : associates
     }
 }
 
