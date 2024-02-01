@@ -19,7 +19,8 @@ objects.
 - [x] Constructional design.
 - [ ] Articular-monkey design.
 - [ ] Deployment design.
-- [ ] Testing and tech-demos.
+- [x] Testing and tech-demos.
+    * [TestArticularManager](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/TestArticularManager.java): tests the articular manager utility composing both the standard ecs manager, and the cache manager in a embedded data-flow environment.  
 - [ ] Documentation.
 - [ ] Deployment scripting.
 - [ ] Deployment.
@@ -28,8 +29,14 @@ objects.
 ## In-use architectural patterns: 
 - [x] Data-centered architectural pattern.
 - [x] Hierarchical architectural pattern.
+- [ ] Data-flow pipe architectural pattern.
 
 ## In-use detailed-design patterns:
 - [x] Strategy pattern.
 - [x] Template pattern.
 - [x] Composite pattern.
+- [ ] Finite-state-automata (FSA).
+
+## In-use DSA libraries: 
+- [x] Java Collection framework.
+- [ ] Arithmos.
