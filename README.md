@@ -25,7 +25,8 @@ objects. The API provides a strong abstraction based on the data-centered archit
 - [ ] Articular-monkey design.
 - [ ] Deployment design.
 - [x] Testing and tech-demos.
-    * [TestArticularManager](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/TestArticularManager.java): tests the articular manager utility composing both the standard ecs manager, and the cache manager in a embedded data-flow environment.  
+    * [TestArticularManager](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/TestArticularManager.java): tests the articular manager utility composing both the standard ecs manager, and the cache manager in a embedded data-flow environment.
+    * [TestArticularJme](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/labs/techdemos/jme/TestArticularJme.java): migrated _[TestJaime.java](https://github.com/jMonkeyEngine/jmonkeyengine/blob/master/jme3-examples/src/main/java/jme3test/animation/TestJaime.java)_ to use articular-es; where Jaimes and Cinematics (Components) are built, and added to the JumpKickCinematic System.
 - [ ] Documentation.
 - [ ] Deployment scripting.
 - [ ] Deployment.
