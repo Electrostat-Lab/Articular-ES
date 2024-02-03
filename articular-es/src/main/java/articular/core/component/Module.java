@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,12 +43,28 @@ public interface Module extends Component {
     default void register(Component component) {
         getComponents().put(component.getId().intValue(), component);
     }
+    default void register(Component.Id id, Component component) {
+        getComponents().put(id.intValue(), component);
+    }
     default void unregister(Component component) {
         getComponents().remove(component.getId().intValue());
     }
 
-    default boolean hasComponent(Component component) {
-        return getComponents().get(component.getId().intValue()) != null;
+    default void unregister(Component.Id id) {
+        getComponents().remove(id.intValue());
     }
+
+    default boolean hasComponent(Component.Id id) {
+        return getComponent(id) != null;
+    }
+
+    default boolean hasComponent(Component component) {
+        return getComponent(component.getId()) != null;
+    }
+
+    default Component getComponent(Component.Id id) {
+        return getComponents().get(id.intValue());
+    }
+
     MemoryMap.EntityComponentMap getComponents();
 }
