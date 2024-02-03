@@ -59,9 +59,9 @@ public interface SystemManager<P extends MemoryMap, S extends MemoryMap, K exten
 
     S allocateMemoryMap(K substrate);
 
-    Component allocateComponent(Entity entity, SystemController systemController, Component.Id id);
+    <T extends Component> T allocateComponent(Entity entity, SystemController systemController, Component.Id id);
 
-    Component getComponent(Entity entity, SystemController systemController);
+    <T extends Component> T getComponent(Entity entity, SystemController systemController);
 
     P getPrimaryMemoryMap();
 

@@ -39,6 +39,7 @@ import articular.core.MemoryMap;
  *
  * @author pavl_g
  */
+@SuppressWarnings("unchecked")
 public interface Module extends Component {
     default void register(Component component) {
         getComponents().put(component.getId().intValue(), component);
@@ -62,8 +63,8 @@ public interface Module extends Component {
         return getComponent(component.getId()) != null;
     }
 
-    default Component getComponent(Component.Id id) {
-        return getComponents().get(id.intValue());
+    default <T extends Component> T getComponent(Component.Id id) {
+        return (T) getComponents().get(id.intValue());
     }
 
     MemoryMap.EntityComponentMap getComponents();

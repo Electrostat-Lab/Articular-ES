@@ -41,6 +41,7 @@ import articular.util.Validator;
 /**
  * @author pavl_g
  */
+@SuppressWarnings("unchecked")
 public class CacheManager implements SystemManager<MemoryMap.CacheMap, MemoryMap.SystemComponentMap, Entity> {
     protected MemoryMap.CacheMap cacheMap = new MemoryMap.CacheMap();
 
@@ -90,18 +91,18 @@ public class CacheManager implements SystemManager<MemoryMap.CacheMap, MemoryMap
     }
 
     @Override
-    public Component allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
+    public <T extends Component> T allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
         final Component component = () -> id;
         register(entity, component, systemController);
-        return component;
+        return (T) component;
     }
 
     @Override
-    public Component getComponent(Entity entity, SystemController systemController) {
+    public <T extends Component> T getComponent(Entity entity, SystemController systemController) {
         Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         final MemoryMap.SystemComponentMap components = getSecondaryMemoryMap(entity);
         Validator.validate(components, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        return components.get(systemController.getAssociatedSystem().getSystemName());
+        return (T) components.get(systemController.getAssociatedSystem().getSystemName());
     }
 
     @Override

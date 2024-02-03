@@ -39,22 +39,23 @@ import articular.core.system.SystemController;
 import articular.core.system.manager.CacheManager;
 import articular.core.system.manager.EntityComponentManager;
 
+@SuppressWarnings("unchecked")
 public class ArticularManager<I> extends EntityComponentManager<I> {
 
     protected CacheManager cacheManager = new CacheManager();
     protected boolean enableCaching = true;
 
     @Override
-    public Component allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
+    public <T extends Component> T allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
         final Component component = () -> id;
         register(entity, component, systemController);
 
         if (!isEnableCaching()) {
-            return component;
+            return (T) component;
         }
         // cache to the [entity][system](component) layout
         cacheManager.register(entity, component, systemController);
-        return component;
+        return (T) component;
     }
 
     @Override

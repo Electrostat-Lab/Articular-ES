@@ -48,6 +48,7 @@ import java.util.Objects;
  * @see CacheManager for entity-system-component layouting
  * @see SystemController for instantiating systems
  */
+@SuppressWarnings("unchecked")
 public class EntityComponentManager<I> implements SystemManager<MemoryMap.SystemMap, MemoryMap.EntityComponentMap, SystemController> {
 
     protected MemoryMap.SystemMap systems = new MemoryMap.SystemMap();
@@ -56,10 +57,10 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     }
 
     @Override
-    public Component allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
+    public <T extends Component> T allocateComponent(Entity entity, SystemController systemController, Component.Id id) {
         final Component component = () -> id;
         register(entity, component, systemController);
-        return component;
+        return (T) component;
     }
 
     public Entity createEntity(SystemController systemController, String name) {
@@ -76,11 +77,11 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     }
 
     @Override
-    public Component getComponent(Entity entity, SystemController systemController) {
+    public <T extends Component> T getComponent(Entity entity, SystemController systemController) {
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
         MemoryMap.EntityComponentMap components = getSecondaryMemoryMap(systemController);
         Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
-        return components.get(entity.getId().intValue());
+        return (T) components.get(entity.getId().intValue());
     }
 
     @Override
