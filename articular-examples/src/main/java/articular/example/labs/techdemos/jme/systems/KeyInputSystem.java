@@ -58,7 +58,7 @@ public class KeyInputSystem implements SystemEntitiesUpdater<SimpleApplication> 
 
     @Override
     public void update(MemoryMap.EntityComponentMap entityMap, EntityComponentManager<SimpleApplication> entityComponentManager, SimpleApplication input) {
-        final Module inputs = (Module)
+        final Module inputs =
                 entityComponentManager.getComponent(GameComponents.INPUT_COMPONENTS.getEntity(), this);
         // collect the data from the components
         final ArrayList<String> mappings = new ArrayList<>();
