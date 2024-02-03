@@ -61,7 +61,7 @@ public class JaimeBuilder implements SystemEntitiesUpdater<SimpleApplication> {
 
     @Override
     public void update(MemoryMap.EntityComponentMap entityMap, EntityComponentManager<SimpleApplication> entityComponentManager, SimpleApplication input) {
-        final Module env = (Module)
+        final Module env =
                 entityComponentManager.getComponent(GameComponents.JAIME.getEntity(), this);
         env.getComponents().forEach((number, component) -> {
             try {

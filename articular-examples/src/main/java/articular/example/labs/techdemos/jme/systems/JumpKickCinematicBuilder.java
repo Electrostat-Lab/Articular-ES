@@ -63,7 +63,7 @@ public class JumpKickCinematicBuilder implements SystemEntitiesUpdater<SimpleApp
     @Override
     public void update(MemoryMap.EntityComponentMap entityMap, EntityComponentManager<SimpleApplication> entityComponentManager, SimpleApplication input) {
         final Module cinematics =
-                (Module) entityComponentManager.getComponent(GameComponents.CINEMATIC_COMPONENTS.getEntity(), this);
+                entityComponentManager.getComponent(GameComponents.CINEMATIC_COMPONENTS.getEntity(), this);
         try {
             setup(input, entityComponentManager, cinematics);
         } catch (NoSuchFieldException | IllegalAccessException e) {

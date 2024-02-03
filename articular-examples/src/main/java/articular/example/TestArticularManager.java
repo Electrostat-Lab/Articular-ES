@@ -120,7 +120,7 @@ public class TestArticularManager {
         public void update(MemoryMap.SystemMap systemMap, EntityComponentManager<String> entityComponentManager, String input) {
             System.out.println();
             System.out.println(input);
-            final Module module = (Module) entityComponentManager.getComponent(serialMouse, this);
+            final Module module = entityComponentManager.getComponent(serialMouse, this);
             System.out.println(module.getComponents());
         }
     }
