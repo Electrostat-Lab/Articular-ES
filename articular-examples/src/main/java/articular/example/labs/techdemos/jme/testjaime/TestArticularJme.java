@@ -29,13 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme;
+package articular.example.labs.techdemos.jme.testjaime;
 
 import articular.core.component.Component;
-import articular.example.labs.techdemos.jme.components.*;
-import articular.example.labs.techdemos.jme.systems.JumpKickCinematicBuilder;
-import articular.example.labs.techdemos.jme.systems.JaimeBuilder;
-import articular.example.labs.techdemos.jme.systems.KeyInputSystem;
+import articular.example.labs.techdemos.jme.testjaime.systems.JumpKickCinematicBuilder;
+import articular.example.labs.techdemos.jme.testjaime.components.*;
+import articular.example.labs.techdemos.jme.testjaime.systems.JaimeBuilder;
+import articular.example.labs.techdemos.jme.testjaime.systems.KeyInputSystem;
 import articular.util.ArticularManager;
 import com.jme3.app.*;
 import com.jme3.input.KeyInput;

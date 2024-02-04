@@ -29,28 +29,43 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme.components;
+package articular.example.labs.techdemos.jme.testjaime.components;
 
-import articular.core.MemoryMap;
 import articular.core.component.Component;
-import articular.core.component.Module;
+import com.jme3.anim.AnimFactory;
+import com.jme3.animation.LoopMode;
+import com.jme3.cinematic.Cinematic;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
-public class ComponentCollection implements Module {
+public class JumpKickCinematic implements Component {
 
-    private final MemoryMap.EntityComponentMap ecsMap = new MemoryMap.EntityComponentMap();
-    private final Component.Id componentId;
+    private final Cinematic cinematic;
+    private final AnimFactory jumpForward = new AnimFactory(1f, "JumpForward", 30f);
+    private final AnimFactory startingPosition = new AnimFactory(0.01f, "StartingPosition", 30f);
+    private final MotionPath motionPath = new MotionPath();
 
-    public ComponentCollection(Component.Id componentId) {
-        this.componentId = componentId;
+    public JumpKickCinematic(final Node scene, final float initialDuration) {
+        cinematic = new Cinematic(scene, initialDuration);
+
+        jumpForward.addTimeTranslation(0, new Vector3f(0, 0, -3));
+        jumpForward.addTimeTranslation(0.35f, new Vector3f(0, 1, -1.5f));
+        jumpForward.addTimeTranslation(0.7f, new Vector3f(0, 0, 0));
+
+        motionPath.addWayPoint(new Vector3f(1.1f, 1.2f, 2.9f));
+        motionPath.addWayPoint(new Vector3f(0f, 1.2f, 3.0f));
+        motionPath.addWayPoint(new Vector3f(-1.1f, 1.2f, 2.9f));
+        // motionPath.enableDebugShape(app.getAssetManager(), app.getRootNode());
+        motionPath.setCurveTension(0.8f);
+
+        cinematic.setSpeed(1.2f);
+        cinematic.setLoopMode(LoopMode.Loop);
     }
 
     @Override
     public Id getId() {
-        return componentId;
-    }
-
-    @Override
-    public MemoryMap.EntityComponentMap getComponents() {
-        return ecsMap;
+        return new Component.Id((hashCode() >>> 16) ^
+                GameComponents.CINEMATIC_COMPONENTS.getEntity().getId().intValue());
     }
 }

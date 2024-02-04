@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+package "labs.techdemos.jme.testjaime.TestArticularJme" <<techdemo>> {
+    rectangle "ecsManager: ArticularManager" {
+        node "systemMap: SystemMap" <<memory-map>> #AD7FA8 {
+            node "jaimeBuilder: JaimeBuilder" <<system>> #FFFFFF {
+                node "entityMap: EntityComponentMap" <<memory-map>> #AD7FA8 {
+                    component "characters: Module" <<characters-entity>> #8AE234 {
+                        component "jaime0: Component" <<id = jaime0.getId()>>
+                        component "jaime1: Component" <<id = jaime1.getId()>>
+                        component "jaime2: Component" <<id = jaime2.getId()>>
+                        component "jaime3: Component" <<id = jaime3.getId()>>
+                    }
+                }
+                stack "   JaimeBuilder   " <<op-code>> #FCAF3E {
+                    "  JaimeBuilder#update(...)  "
+                }
+
+                "   JaimeBuilder   " <--(0 "characters: Module" : requires
+            }
+
+            node "cinematicBuilder: CinematicBuilder" <<system>> #FFFFFF {
+                node "entityMap0: EntityComponentMap" <<memory-map>> #AD7FA8 {
+                    component "cinematics: Module" <<cinematics-entity>> #8AE234 {
+                        component "cinematic0: Component" <<id = jaime0.getId()>>
+                        component "cinematic1: Component" <<id = jaime1.getId()>>
+                        component "cinematic2: Component" <<id = jaime2.getId()>>
+                        component "cinematic3: Component" <<id = jaime3.getId()>>
+                    }
+                }
+
+                stack "   CinematicBuilder   " <<op-code>> #FCAF3E {
+                "  CinematicBuilder#update(...)  "
+                }
+
+                "   CinematicBuilder   " <--(0 "cinematics: Module" : requires
+            }
+            "   CinematicBuilder   " <--(0 "characters: Module" : requires
+        }
+    }
+}
+
+@enduml

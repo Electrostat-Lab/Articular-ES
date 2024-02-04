@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme.systems;
+package articular.example.labs.techdemos.jme.testjaime.systems;
 
 import articular.core.MemoryMap;
 import articular.core.component.Component;
@@ -37,7 +37,7 @@ import articular.core.component.Module;
 import articular.core.system.ArticularSystem;
 import articular.core.system.SystemEntitiesUpdater;
 import articular.core.system.manager.EntityComponentManager;
-import articular.example.labs.techdemos.jme.components.GameComponents;
+import articular.example.labs.techdemos.jme.testjaime.components.GameComponents;
 import com.jme3.anim.AnimClip;
 import com.jme3.anim.AnimComposer;
 import com.jme3.anim.AnimFactory;
