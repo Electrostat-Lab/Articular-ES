@@ -29,4 +29,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme.components;
+package articular.example.labs.techdemos.jme.testjaime.components;
+
+import articular.core.component.Component;
+import com.jme3.input.controls.KeyTrigger;
+
+public final class InputComponent implements Component {
+
+    private final String mapping;
+    private final KeyTrigger key;
+
+    public InputComponent(String mapping, KeyTrigger key) {
+        this.mapping = mapping;
+        this.key = key;
+    }
+
+    @Override
+    public Id getId() {
+        return new Component.Id((hashCode() >>> 16) ^
+                GameComponents.INPUT_COMPONENTS.getEntity().getId().intValue());
+    }
+}

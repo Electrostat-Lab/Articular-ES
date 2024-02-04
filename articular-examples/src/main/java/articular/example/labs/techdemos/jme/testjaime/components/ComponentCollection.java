@@ -29,4 +29,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme;
+package articular.example.labs.techdemos.jme.testjaime.components;
+
+import articular.core.MemoryMap;
+import articular.core.component.Component;
+import articular.core.component.Module;
+
+public class ComponentCollection implements Module {
+
+    private final MemoryMap.EntityComponentMap ecsMap = new MemoryMap.EntityComponentMap();
+    private final Component.Id componentId;
+
+    public ComponentCollection(Component.Id componentId) {
+        this.componentId = componentId;
+    }
+
+    @Override
+    public Id getId() {
+        return componentId;
+    }
+
+    @Override
+    public MemoryMap.EntityComponentMap getComponents() {
+        return ecsMap;
+    }
+}

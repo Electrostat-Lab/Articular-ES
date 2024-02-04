@@ -29,22 +29,36 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme.components;
+package articular.example.labs.techdemos.jme.testjaime.components;
 
-import articular.core.Entity;
+import articular.core.component.Component;
+import com.jme3.asset.AssetManager;
+import com.jme3.light.AmbientLight;
+import com.jme3.light.PointLight;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 
-public enum GameComponents {
-    JAIME(Jaime.class.getName()),
-    CINEMATIC_COMPONENTS(JumpKickCinematic.class.getName()),
-    INPUT_COMPONENTS(InputComponent.class.getName());
+/**
+ * A composite component providing high-level object fields
+ * for the scene environment, this corresponds to the setupScene().
+ *
+ * @author pavl_g
+ */
+public final class Jaime implements Component {
 
-    private final String entity;
+    private final Node jaime;
+    private final Vector3f worldPosition;
+    private final AmbientLight ambientLight = new AmbientLight();
+    private final PointLight pointLight = new PointLight();
 
-    GameComponents(String entity) {
-        this.entity = entity;
+    public Jaime(final AssetManager assetManager, final Vector3f worldPosition) {
+        jaime = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
+        this.worldPosition = worldPosition;
     }
 
-    public Entity getEntity() {
-        return new Entity(entity);
+    @Override
+    public Id getId() {
+        return new Component.Id((hashCode() >>> 16) ^
+                GameComponents.JAIME.getEntity().getId().intValue());
     }
 }

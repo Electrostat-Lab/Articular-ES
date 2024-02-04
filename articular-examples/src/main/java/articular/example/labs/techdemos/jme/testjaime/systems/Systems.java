@@ -29,36 +29,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme.components;
+package articular.example.labs.techdemos.jme.testjaime.systems;
 
-import articular.core.component.Component;
-import com.jme3.asset.AssetManager;
-import com.jme3.light.AmbientLight;
-import com.jme3.light.PointLight;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
+import articular.core.system.ArticularSystem;
 
 /**
- * A composite component providing high-level object fields
- * for the scene environment, this corresponds to the setupScene().
+ * Defines aliases for associated systems.
  *
  * @author pavl_g
  */
-public final class Jaime implements Component {
+public enum Systems implements ArticularSystem {
+    CINEMATIC_SYSTEM(JumpKickCinematicBuilder.class.getName()),
+    KEY_INPUT_SYSTEM(KeyInputSystem.class.getName()),
+    ENV_SYSTEM(JaimeBuilder.class.getName());
 
-    private final Node jaime;
-    private final Vector3f worldPosition;
-    private final AmbientLight ambientLight = new AmbientLight();
-    private final PointLight pointLight = new PointLight();
+    private final String systemName;
 
-    public Jaime(final AssetManager assetManager, final Vector3f worldPosition) {
-        jaime = (Node) assetManager.loadModel("Models/Jaime/Jaime.j3o");
-        this.worldPosition = worldPosition;
+    Systems(final String systemName) {
+        this.systemName = systemName;
     }
 
     @Override
-    public Id getId() {
-        return new Component.Id((hashCode() >>> 16) ^
-                GameComponents.JAIME.getEntity().getId().intValue());
+    public String getSystemName() {
+        return systemName;
     }
 }

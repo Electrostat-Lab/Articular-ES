@@ -29,28 +29,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.example.labs.techdemos.jme.systems;
-
-import articular.core.system.ArticularSystem;
-
-/**
- * Defines aliases for associated systems.
- *
- * @author pavl_g
- */
-public enum Systems implements ArticularSystem {
-    CINEMATIC_SYSTEM(JumpKickCinematicBuilder.class.getName()),
-    KEY_INPUT_SYSTEM(KeyInputSystem.class.getName()),
-    ENV_SYSTEM(JaimeBuilder.class.getName());
-
-    private final String systemName;
-
-    Systems(final String systemName) {
-        this.systemName = systemName;
-    }
-
-    @Override
-    public String getSystemName() {
-        return systemName;
-    }
-}
+package articular.example.labs.techdemos.jme.testjaime.systems;
