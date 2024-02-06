@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,34 +29,4 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package articular.util;
-
-import articular.throwable.AssociatedObjectNotFoundException;
-
-public final class Validator {
-    public enum Message {
-        ASSOCIATED_SYSTEM_NOT_FOUND("System not found!"),
-        ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND("Entity-Component map not found!"),
-        ASSOCIATED_SYSTEM_COMPONENT_MAP_NOT_FOUND("Cache is not found or disabled!"),
-        ENTITY_NOT_FOUND("Entity not found!"),
-        COMPONENT_NOT_FOUND("Component not found!"),
-        DATA_PIPE_NOT_FOUND("Data-pipe not found!"),
-        ID_NOT_FOUND("Identifier not found!");
-
-        private final String message;
-
-        Message(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
-
-    public static void validate(Validatable validatable, Message msg) {
-        if (validatable == null) {
-            throw new AssociatedObjectNotFoundException(msg);
-        }
-    }
-}
+package articular.core.system.data;
