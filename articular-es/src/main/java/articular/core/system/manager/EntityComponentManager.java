@@ -38,6 +38,7 @@ import articular.core.system.ComponentUpdater;
 import articular.core.system.SystemController;
 import articular.core.system.SystemEntitiesUpdater;
 import articular.core.system.SystemsUpdater;
+import articular.core.system.data.DataPipe;
 import articular.util.Validator;
 import java.util.Objects;
 
@@ -52,6 +53,7 @@ import java.util.Objects;
 public class EntityComponentManager<I> implements SystemManager<MemoryMap.SystemMap, MemoryMap.EntityComponentMap, SystemController> {
 
     protected MemoryMap.SystemMap systems = new MemoryMap.SystemMap();
+    protected MemoryMap.DataPipeMap dataPipeMap = new MemoryMap.DataPipeMap();
 
     public EntityComponentManager() {
     }
@@ -131,6 +133,33 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
         Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
         Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
         getSecondaryMemoryMap(systemController).remove(entity.getId().intValue());
+    }
+
+    public <T, A> void registerDataPipe(DataPipe<T, A> dataPipe) {
+        registerDataPipe(dataPipe.getId(), dataPipe);
+    }
+
+    public <T, A> void registerDataPipe(Component.Id id, DataPipe<T, A> dataPipe) {
+        Validator.validate(dataPipe, Validator.Message.DATA_PIPE_NOT_FOUND);
+        dataPipeMap.put(id.intValue(), dataPipe);
+    }
+
+    public <T, A> void unregisterDataPipe(DataPipe<T, A> dataPipe) {
+        Validator.validate(dataPipe, Validator.Message.DATA_PIPE_NOT_FOUND);
+        unregisterDataPipe(dataPipe.getId());
+    }
+
+    public void unregisterDataPipe(Component.Id id) {
+        dataPipeMap.remove(id.intValue());
+    }
+
+    public <T, A> DataPipe<T, A> getDataPipe(Component.Id id) {
+        Validator.validate(id, Validator.Message.ID_NOT_FOUND);
+        return (DataPipe<T, A>) dataPipeMap.get(id.intValue());
+    }
+
+    public boolean hasDataPipe(Component.Id id) {
+        return getDataPipe(id) != null;
     }
 
     @Override

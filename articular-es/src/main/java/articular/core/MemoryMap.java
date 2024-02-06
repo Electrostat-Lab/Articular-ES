@@ -32,6 +32,7 @@
 package articular.core;
 
 import articular.core.component.Component;
+import articular.core.system.data.DataPipe;
 import articular.core.system.manager.EntityComponentManager;
 import articular.util.Validatable;
 
@@ -67,6 +68,9 @@ public interface MemoryMap extends Validatable {
     }
 
     final class CacheMap extends ConcurrentHashMap<Number, SystemComponentMap> implements MemoryMap {
+    }
+
+    final class DataPipeMap extends ConcurrentHashMap<Number, DataPipe<?, ?>> implements MemoryMap {
     }
 }
 

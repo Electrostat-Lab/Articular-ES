@@ -28,35 +28,17 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 package articular.util;
 
-import articular.throwable.AssociatedObjectNotFoundException;
-
-public final class Validator {
-    public enum Message {
-        ASSOCIATED_SYSTEM_NOT_FOUND("System not found!"),
-        ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND("Entity-Component map not found!"),
-        ASSOCIATED_SYSTEM_COMPONENT_MAP_NOT_FOUND("Cache is not found or disabled!"),
-        ENTITY_NOT_FOUND("Entity not found!"),
-        COMPONENT_NOT_FOUND("Component not found!"),
-        DATA_PIPE_NOT_FOUND("Data-pipe not found!"),
-        ID_NOT_FOUND("Identifier not found!");
-
-        private final String message;
-
-        Message(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
-
-    public static void validate(Validatable validatable, Message msg) {
-        if (validatable == null) {
-            throw new AssociatedObjectNotFoundException(msg);
-        }
-    }
+/**
+ * Provides an object that can be identified by its unique identifier.
+ * <p>
+ * Use the hashing spread methods to generate a unique identifier for this
+ * object, for example: (hashCode() >>> (Integer.SIZE/2)) ^ hashCode().
+ * </p>
+ *
+ * @param <T>
+ */
+public interface Identifiable<T> extends Validatable {
+    T getId();
 }

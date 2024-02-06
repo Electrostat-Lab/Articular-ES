@@ -32,7 +32,9 @@
 package articular.core.component;
 
 import articular.core.Entity;
+import articular.util.Identifiable;
 import articular.util.Validatable;
+
 import java.lang.reflect.Field;
 
 /**
@@ -41,7 +43,7 @@ import java.lang.reflect.Field;
  * @author pavl_g
  */
 @SuppressWarnings("unchecked")
-public interface Component extends Validatable {
+public interface Component extends Identifiable<Component.Id> {
 
     /**
      * Retrieves all the declared fields in an array of {@link Field}.
@@ -67,13 +69,14 @@ public interface Component extends Validatable {
         return (T) data.get(this);
     }
 
+    @Override
     Component.Id getId();
 
     /**
      * Represents the component identifier of type number, this encapsulates
      * a constant long value to accommodate larger number of game entity components.
      */
-    final class Id extends Number {
+    final class Id extends Number implements Validatable {
         private final int id;
 
         /**
