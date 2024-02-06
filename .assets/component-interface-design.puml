@@ -38,6 +38,10 @@ package "com.articular.core" {
 
         [Component] <|-- [Entity]
         [Component] <|-- [Module]
+
+        cloud "DataPipe" <<interface>> #FFFFFF {
+            "Exposed data pipe objects"
+        }
     }
 
     node "MemoryMaps" #AD7FA8 {
@@ -47,6 +51,7 @@ package "com.articular.core" {
         [EntityComponentMap] <<memorymap>>
         [SystemComponentMap] <<memorymap>>
         [CacheMap] <<memorymap>>
+        [DataPipeMap] <<memorymap>>
 
         [EntityComponentMap] <-- [Module] : associates
     }
