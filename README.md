@@ -56,8 +56,10 @@ objects. The API provides a strong abstraction based on the data-centered archit
 
 - Resources
 
-| Software Design | Data-oriented design |
+| Software Design | Data-oriented Design (DoD) |
 |-----------------|------------------------|
 | [![](https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/593dba70-aa23-4a79-94c5-127d7c635393)](https://www.amazon.com/Software-Engineering-Design-Practice-Applied/dp/1439851689) | [![](https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/b8f980d9-1ee5-45f6-8781-ac1f92156e2a)](https://www.amazon.com/Data-oriented-design-engineering-resources-schedules/dp/1916478700) |
+| [![](https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/f45be0e4-fe1b-446d-bb95-115ed212ed52)](https://www.amazon.com/Design-Patterns-Object-Oriented-Addison-Wesley-Professional-ebook/dp/B000SEIBB8) | |
+
 
 
