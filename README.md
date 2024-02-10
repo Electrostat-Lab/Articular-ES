@@ -1,4 +1,7 @@
 # <img src="https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/6d7d9ff3-60f9-476e-85aa-686ca4330b7f" width=120 height=120/> Articular-ES
+[![](https://github.com/Software-Hardware-Codesign/Articular-ES/actions/workflows/build-test.yml/badge.svg)](https://github.com/Software-Hardware-Codesign/Articular-ES/actions) [![](https://github.com/Software-Hardware-Codesign/Articular-ES/actions/workflows/build-deploy.yml/badge.svg)](https://repo.maven.apache.org/maven2/io/github/software-hardware-codesign/)
+
+
 An entity component system (ECS) framework featuring strong articulations among components
 from different systems through controller interfaces. The API is powered by a caching system that enables caching data in different
 configurations. Operational interactions take place within the system manager through the controller
