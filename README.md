@@ -33,7 +33,7 @@ objects. The API provides a strong abstraction based on the data-centered archit
     * [TestArticularJme](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/labs/techdemos/jme/TestArticularJme.java): migrated _[TestJaime.java](https://github.com/jMonkeyEngine/jmonkeyengine/blob/master/jme3-examples/src/main/java/jme3test/animation/TestJaime.java)_ to use articular-es; where Jaimes and Cinematics (Components) are built, and added to the JumpKickCinematic System.
     * [TestDataPipes](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/TestDataPipes.java): tests the new data pipe featured interface in a sensor module example that envisions calculating data using linear algebra, the connection is made between two systems (DataCollector and DataProcessor).
 - [ ] Documentation.
-- [ ] Deployment scripting.
+- [x] Deployment scripting.
 - [ ] Deployment.
 - [ ] Real life examples (Serial4j).
 
