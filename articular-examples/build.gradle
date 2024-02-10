@@ -12,12 +12,16 @@ plugins {
 
 application {
     // Define the main class for the application.
-    mainClass = 'com.articular.example.TestEntityComponentManager'
+    mainClass = 'articular.example.TestArticularManager'
 }
 
 repositories {
     mavenCentral()
     mavenLocal()
+}
+
+tasks.register("TestDataPipes") {
+    application.mainClass = 'articular.example.TestDataPipes'
 }
 
 dependencies {
