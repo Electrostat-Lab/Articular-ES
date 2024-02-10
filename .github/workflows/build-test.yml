@@ -90,5 +90,8 @@ jobs:
               name: articular-es-snapshot
               path: articular-es/build/libs/
 
-          - name: Run articular-es example
+          - name: Run articular-es ArticularManager example
             run: ./gradlew :articular-examples:run
+
+          - name: Run articular-es DataPipe example
+            run: ./gradlew :articular-examples:TestDataPipes :articular-examples:run
