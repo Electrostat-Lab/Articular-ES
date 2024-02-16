@@ -66,6 +66,6 @@ public class JumpKickCinematic implements Component {
     @Override
     public Id getId() {
         return new Component.Id((hashCode() >>> 16) ^
-                GameComponents.CINEMATIC_COMPONENTS.getEntity().getId().intValue());
+                GameComponents.CINEMATIC_COMPONENTS.getEntity().getId().longValue());
     }
 }

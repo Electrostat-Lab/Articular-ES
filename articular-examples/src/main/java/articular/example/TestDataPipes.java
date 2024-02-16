@@ -61,7 +61,7 @@ public final class TestDataPipes {
                 System.out.println(input);
 
                 // retrieve the value of proximitor
-                final Module sensorModule1 = (Module) entityMap.get(sensors.getId().intValue());
+                final Module sensorModule1 = (Module) entityMap.get(sensors.getId().longValue());
                 // set the new data under this module
                 final SensorModule.AccelerometerData data = new SensorModule.AccelerometerData(2, 3, 5);
                 sensorModule1.register(SensorModule.Entities.ACCELEROMETER.getEntity().getId(), data);
@@ -86,7 +86,7 @@ public final class TestDataPipes {
             }
 
             @Override
-            public ArticularSystem getAssociatedSystem() {
+            public ArticularSystem getId() {
                 return () -> "Sensor-module-data-collector";
             }
         };
@@ -97,7 +97,7 @@ public final class TestDataPipes {
                 System.out.println(input);
 
                 // unpack the data pipe and act on data
-                final Module sensorModule1 = (Module) entityMap.get(sensors.getId().intValue());
+                final Module sensorModule1 = (Module) entityMap.get(sensors.getId().longValue());
                 final SensorModule.ProximitorData data = sensorModule1.getComponent(SensorModule.Entities.PROXIMITY.getEntity().getId());
 
                 final DataPipe<Float, Float> dataPipe1 = entityComponentManager.getDataPipe(sensorModule.getId());
@@ -108,7 +108,7 @@ public final class TestDataPipes {
             }
 
             @Override
-            public ArticularSystem getAssociatedSystem() {
+            public ArticularSystem getId() {
                 return () -> "Sensor-module-data-postprocessing";
             }
         };

@@ -52,7 +52,7 @@ import java.util.ArrayList;
 public class KeyInputSystem implements SystemEntitiesUpdater<SimpleApplication> {
 
     @Override
-    public ArticularSystem getAssociatedSystem() {
+    public ArticularSystem getId() {
         return Systems.KEY_INPUT_SYSTEM;
     }
 
@@ -78,8 +78,8 @@ public class KeyInputSystem implements SystemEntitiesUpdater<SimpleApplication> 
         input.getInputManager().addListener((ActionListener) (name, isPressed, tpf) -> {
             if (name.equals("start") && isPressed) {
 
-                final MemoryMap.EntityComponentMap map = entityComponentManager.getPrimaryMemoryMap().get(Systems.CINEMATIC_SYSTEM.getSystemName());
-                final Module cinematics = (Module) map.get(GameComponents.CINEMATIC_COMPONENTS.getEntity().getId().intValue());
+                final MemoryMap.EntityComponentMap map = entityComponentManager.getMemoryMap().get(Systems.CINEMATIC_SYSTEM.getId());
+                final Module cinematics = (Module) map.get(GameComponents.CINEMATIC_COMPONENTS.getEntity().getId().longValue());
 
                 cinematics.getComponents().forEach((number, component) -> {
                     final Cinematic cinematic;

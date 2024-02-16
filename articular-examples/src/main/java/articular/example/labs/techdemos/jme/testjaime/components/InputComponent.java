@@ -47,6 +47,6 @@ public final class InputComponent implements Component {
     @Override
     public Id getId() {
         return new Component.Id((hashCode() >>> 16) ^
-                GameComponents.INPUT_COMPONENTS.getEntity().getId().intValue());
+                GameComponents.INPUT_COMPONENTS.getEntity().getId().longValue());
     }
 }

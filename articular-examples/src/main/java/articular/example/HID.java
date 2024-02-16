@@ -12,7 +12,7 @@ public enum HID implements ArticularSystem {
     }
 
     @Override
-    public String getSystemName() {
+    public String getId() {
         return system;
     }
 }
