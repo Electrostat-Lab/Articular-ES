@@ -64,7 +64,11 @@ dependencies {
 
 ### Appendix
 
-- Resources
+- Overview: 
+
+https://github.com/Software-Hardware-Codesign/Articular-ES/assets/60224159/5ed857ba-3ea9-416c-b936-5bb51bafd6b5
+
+- Resources:
 
 | Software Design | Data-oriented Design (DoD) |
 |-----------------|------------------------|
