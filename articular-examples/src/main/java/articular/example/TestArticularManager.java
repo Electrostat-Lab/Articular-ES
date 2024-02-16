@@ -84,7 +84,7 @@ public class TestArticularManager {
     public static final class InputDataProcessor implements SystemEntitiesUpdater<String>, ComponentUpdater<String>, SystemsUpdater<String> {
 
         @Override
-        public ArticularSystem getAssociatedSystem() {
+        public ArticularSystem getId() {
             return HID.INPUT_PROCESSOR;
         }
 
@@ -94,7 +94,7 @@ public class TestArticularManager {
             System.out.println();
             System.out.println(input);
             // retrieve the serial mouse entity
-            final Component components = entityMap.get(serialMouse.getId().intValue());
+            final Component components = entityMap.get(serialMouse.getId().longValue());
             final Module electronicModule = (Module) components;
             // print the electronic module of the serial mouse
             System.out.println(electronicModule.getComponents());
@@ -106,7 +106,7 @@ public class TestArticularManager {
         public void update(MemoryMap.SystemComponentMap components, Entity entity, EntityComponentManager<String> entityComponentManager, String input) {
             System.out.println();
             System.out.println(input);
-            System.out.println(entity.getId().intValue());
+            System.out.println(entity.getId().longValue());
             try {
                 final MemoryMap.EntityComponentMap ecsMap = entityComponentManager.getComponent(entity, this)
                                                             .getData("entityComponentMap");

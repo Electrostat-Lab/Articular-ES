@@ -56,7 +56,7 @@ import com.jme3.scene.Node;
 public class JumpKickCinematicBuilder implements SystemEntitiesUpdater<SimpleApplication> {
 
     @Override
-    public ArticularSystem getAssociatedSystem() {
+    public ArticularSystem getId() {
         return Systems.CINEMATIC_SYSTEM;
     }
 
@@ -75,8 +75,8 @@ public class JumpKickCinematicBuilder implements SystemEntitiesUpdater<SimpleApp
             throws NoSuchFieldException, IllegalAccessException {
 
         // attach cinematic objects to their jaime
-        final MemoryMap.EntityComponentMap map = ecsManager.getPrimaryMemoryMap().get(Systems.ENV_SYSTEM.getSystemName());
-        final Module jaimes = (Module) map.get(GameComponents.JAIME.getEntity().getId().intValue());
+        final MemoryMap.EntityComponentMap map = ecsManager.getMemoryMap().get(Systems.ENV_SYSTEM.getId());
+        final Module jaimes = (Module) map.get(GameComponents.JAIME.getEntity().getId().longValue());
         jaimes.getComponents().forEach((id, jaimeComponent) -> {
             try {
 

@@ -50,7 +50,7 @@ public enum Systems implements ArticularSystem {
     }
 
     @Override
-    public String getSystemName() {
+    public String getId() {
         return systemName;
     }
 }

@@ -55,7 +55,7 @@ import com.jme3.scene.Node;
 public class JaimeBuilder implements SystemEntitiesUpdater<SimpleApplication> {
 
     @Override
-    public ArticularSystem getAssociatedSystem() {
+    public ArticularSystem getId() {
         return Systems.ENV_SYSTEM;
     }
 

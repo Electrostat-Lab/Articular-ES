@@ -59,6 +59,6 @@ public final class Jaime implements Component {
     @Override
     public Id getId() {
         return new Component.Id((hashCode() >>> 16) ^
-                GameComponents.JAIME.getEntity().getId().intValue());
+                GameComponents.JAIME.getEntity().getId().longValue());
     }
 }
