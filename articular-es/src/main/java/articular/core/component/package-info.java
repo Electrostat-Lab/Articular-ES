@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,5 +31,14 @@
 
 /**
  * Provides the core game entities' components for Articular-ES.
+ *
+ * <p>
+ * Articular-ES provides a special way to group components using the
+ * cyclic relationship between the {@link articular.core.component.Component}
+ * and the {@link articular.core.component.Module} interfaces; where an ecs module
+ * is a component itself compositing a memory-map of components. This cyclic design
+ * will allow to model high-complexity physical and digital logic systems (e.g. FPGA
+ * electronics - Analytical Chemistry Models - Composite physics collision).
+ * </p>
  */
 package articular.core.component;

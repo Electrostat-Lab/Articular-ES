@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,11 +36,20 @@ import articular.util.Identifiable;
 
 /**
  * Provides a data pipe for bridging data between systems.
+ * Data-flow architecture is implementable through this API.
  *
  * @param <T> the type of the return value
  * @param <A> the type of the argument value
  * @author pavl_g
  */
 public interface DataPipe<T, A> extends Identifiable<Component.Id> {
+
+    /**
+     * An algorithm wrapper with a return value to communicate
+     * data between systems.
+     *
+     * @param argument a parameter prerequisite (nullable)
+     * @return the value of user algorithm (nullable)
+     */
     T getData(A argument);
 }

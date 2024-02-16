@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,6 +38,13 @@ import articular.core.system.manager.EntityComponentManager;
  * Offers a static ID provider for the {@link MemoryMap.EntityComponentMap}
  * through the {@link EntityComponentManager}.
  *
+ * <p>
+ * An entity is a component with the data field (name); the data-field
+ * name can be exposed by the means of the Component interface, but
+ * exposure might produce API leakage; because the hash spreading
+ * algorithm is internalized.
+ * </p>
+ *
  * @author pavl_g
  * @see MemoryMap.EntityComponentMap
  * @see EntityComponentManager
@@ -46,12 +53,21 @@ public final class Entity implements Component {
 
     private final String name;
 
+    /**
+     * Instantiates a new identifier provider to map
+     * some components in their respective systems.
+     *
+     * @param name the name of this entity; the name is used
+     *             in a hashing compression to produce
+     *             the object identifier.
+     */
     public Entity(String name) {
         this.name = name;
     }
 
     @Override
     public Id getId() {
-        return new Entity.Id((name.hashCode() >>> 16) ^ name.hashCode());
+        return new Entity.Id((name.hashCode() >>> 16) /* spreads MSBs to the lower 16-bits */
+                ^ name.hashCode()) /* composes the MSBs with the LSBs by XORing them */;
     }
 }

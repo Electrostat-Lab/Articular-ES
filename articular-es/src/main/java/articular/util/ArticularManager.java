@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,10 +39,23 @@ import articular.core.system.SystemController;
 import articular.core.system.manager.CacheManager;
 import articular.core.system.manager.EntityComponentManager;
 
+/**
+ * TODO
+ *
+ * @param <I> TODO
+ * @author pavl_g
+ */
 @SuppressWarnings("unchecked")
 public class ArticularManager<I> extends EntityComponentManager<I> {
 
+    /**
+     * TODO
+     */
     protected CacheManager cacheManager = new CacheManager();
+
+    /**
+     * TODO
+     */
     protected boolean enableCaching = true;
 
     @Override
@@ -80,14 +93,14 @@ public class ArticularManager<I> extends EntityComponentManager<I> {
         memoryMap.forEach((number, component) -> {
             // 1) build a memory map
             MemoryMap.SystemComponentMap systemComponentMap;
-            if (cacheManager.getPrimaryMemoryMap().get(number) == null) {
+            if (cacheManager.getMemoryMap().get(number) == null) {
                 systemComponentMap = new MemoryMap.SystemComponentMap();
-                cacheManager.getPrimaryMemoryMap().put(number, systemComponentMap);
+                cacheManager.getMemoryMap().put(number, systemComponentMap);
             } else {
-                systemComponentMap = cacheManager.getPrimaryMemoryMap().get(number);
+                systemComponentMap = cacheManager.getMemoryMap().get(number);
             }
             // 2) copy data
-            systemComponentMap.put(systemController.getAssociatedSystem().getSystemName(),
+            systemComponentMap.put(systemController.getId().getId(),
                     component);
         });
     }
@@ -98,21 +111,36 @@ public class ArticularManager<I> extends EntityComponentManager<I> {
             super.updateEntityComponents(updater, entity, input);
             return;
         }
-        Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
+        Validator.validate(updater, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        Validator.validate(entity, Validator.Message.INVALID_ENTITY);
         // do a manipulation from the cache, constant omega notation, single CPU clock cycles
         // manipulate cache of the [entity][system](component) layout
-        updater.update(cacheManager.getSecondaryMemoryMap(entity), entity, this, input);
+        updater.update(cacheManager.getMemoryMap(entity), entity, this, input);
     }
 
+    /**
+     * Tests whether the caching is enabled.
+     *
+     * @return true if enabled, false otherwise.
+     */
     public boolean isEnableCaching() {
         return enableCaching;
     }
 
+    /**
+     * Enables/disables the caching system.
+     *
+     * @param enableCaching true to enable caching.
+     */
     public void setEnableCaching(boolean enableCaching) {
         this.enableCaching = enableCaching;
     }
 
+    /**
+     * TODO
+     *
+     * @return TODO
+     */
     public CacheManager getCacheManager() {
         return cacheManager;
     }

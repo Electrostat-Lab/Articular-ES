@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,11 +31,28 @@
 
 package articular.core.system;
 
+import articular.util.Identifiable;
+
 /**
  * A generic prototype for the ecs systems.
  *
+ * <p>
+ * Systems in articular-es is a virtual analogy, it's rather a relationship;
+ * the user-defined class implementing {@link articular.core.system.SystemController}
+ * interfaces can be associated with a system {@link articular.core.system.SystemController#getId()}
+ * that provides an identifier {@link articular.core.system.ArticularSystem#getId()} for the
+ * low-level memory-mapping operations.
+ * </p>
+ *
  * @author pavl_g
  */
-public interface ArticularSystem {
-    String getSystemName();
+public interface ArticularSystem extends Identifiable<String> {
+
+    /**
+     * Retrieves the associated system name.
+     *
+     * @return the associated system name in string format.
+     */
+    @Override
+    String getId();
 }

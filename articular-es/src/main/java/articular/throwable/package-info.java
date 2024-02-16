@@ -30,6 +30,6 @@
  */
 
 /**
- * TODO
+ * Provides application-recoverable break points.
  */
-package articular.core.system;
+package articular.throwable;
