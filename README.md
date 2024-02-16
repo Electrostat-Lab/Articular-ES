@@ -27,20 +27,20 @@ objects. The API provides a strong abstraction based on the data-centered archit
 - [x] Detailed design.
 - [x] Constructional design.
 - [ ] Articular-monkey design.
-- [ ] Deployment design.
+- [x] Deployment design.
 - [x] Testing and tech-demos.
     * [TestArticularManager](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/TestArticularManager.java): tests the articular manager utility composing both the standard ecs manager, and the cache manager in a embedded data-flow environment.
     * [TestArticularJme](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/labs/techdemos/jme/TestArticularJme.java): migrated _[TestJaime.java](https://github.com/jMonkeyEngine/jmonkeyengine/blob/master/jme3-examples/src/main/java/jme3test/animation/TestJaime.java)_ to use articular-es; where Jaimes and Cinematics (Components) are built, and added to the JumpKickCinematic System.
     * [TestDataPipes](https://github.com/Software-Hardware-Codesign/Articular-ES/blob/master/articular-examples/src/main/java/articular/example/TestDataPipes.java): tests the new data pipe featured interface in a sensor module example that envisions calculating data using linear algebra, the connection is made between two systems (DataCollector and DataProcessor).
 - [ ] Documentation.
 - [x] Deployment scripting.
-- [ ] Deployment.
+- [x] Deployment.
 - [ ] Real life examples (Serial4j).
 
 ## In-use architectural patterns: 
 - [x] Data-centered architectural pattern.
 - [x] Hierarchical architectural pattern.
-- [ ] Data-flow pipe architectural pattern.
+- [x] Data-flow pipe architectural pattern.
 
 ## In-use detailed-design patterns:
 - [x] Strategy pattern.
@@ -51,6 +51,16 @@ objects. The API provides a strong abstraction based on the data-centered archit
 ## In-use DSA libraries: 
 - [x] Java Collection framework.
 - [ ] Arithmos.
+
+## Quick usage: 
+```bash
+repositories {
+    mavenCentral()
+}
+dependencies {
+    implementation "io.github.software-hardware-codesign:articular-es:$version"
+}
+```
 
 ### Appendix
 
