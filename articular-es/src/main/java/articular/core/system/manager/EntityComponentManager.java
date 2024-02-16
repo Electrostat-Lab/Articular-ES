@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,6 @@ import articular.util.Validator;
 import java.util.Objects;
 
 /**
- *
  * @param <I> the type of the input for the update loop
  * @author pavl_g
  * @see CacheManager for entity-system-component layouting
@@ -52,9 +51,21 @@ import java.util.Objects;
 @SuppressWarnings("unchecked")
 public class EntityComponentManager<I> implements SystemManager<MemoryMap.SystemMap, MemoryMap.EntityComponentMap, SystemController> {
 
+    /**
+     * Provides a memory-map for registering systems; systems
+     * are the first sets in the ECS architectures.
+     */
     protected MemoryMap.SystemMap systems = new MemoryMap.SystemMap();
+
+    /**
+     * Provides a memory-map for data-pipes as an extension to the
+     * data-flow pattern between systems (user-side).
+     */
     protected MemoryMap.DataPipeMap dataPipeMap = new MemoryMap.DataPipeMap();
 
+    /**
+     * Instantiates a new basic system-first ecs-manager.
+     */
     public EntityComponentManager() {
     }
 
@@ -65,14 +76,30 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
         return (T) component;
     }
 
+    /**
+     * Allocates and creates a new entity under the system
+     * associated with this system-controller.
+     *
+     * @param systemController the system controller to retrieve its system (not null).
+     * @param name the name of the entity (used to hash an identifier).
+     * @return the newly allocated entity registered to that system.
+     */
     public Entity createEntity(SystemController systemController, String name) {
         return createEntity(new SystemController[]{systemController}, name);
     }
 
+    /**
+     * Allocates and creates a new entity under the systems
+     * associated with those system-controllers
+     *
+     * @param systemControllers the system controllers to retrieve their systems (not null).
+     * @param name the name of the entity (used to hash an identifier) (not null).
+     * @return the newly allocated entity registered to those systems.
+     */
     public Entity createEntity(SystemController[] systemControllers, String name) {
         final Entity entity = new Entity(name);
         for (SystemController systemController : Objects.requireNonNull(systemControllers)) {
-            Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
+            Validator.validate(systemController, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
             allocateComponent(entity, systemController, entity.getId());
         }
         return entity;
@@ -80,82 +107,109 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
 
     @Override
     public <T extends Component> T getComponent(Entity entity, SystemController systemController) {
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        MemoryMap.EntityComponentMap components = getSecondaryMemoryMap(systemController);
-        Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
-        return (T) components.get(entity.getId().intValue());
+        Validator.validate(entity, Validator.Message.INVALID_ENTITY);
+        MemoryMap.EntityComponentMap components = getMemoryMap(systemController);
+        Validator.validate(components, Validator.Message.INVALID_ASSOCIATED_ENTITY_COMPONENT_MAP);
+        return (T) components.get(entity.getId().longValue());
     }
 
     @Override
-    public MemoryMap.SystemMap getPrimaryMemoryMap() {
+    public MemoryMap.SystemMap getMemoryMap() {
         return systems;
     }
 
     @Override
-    public MemoryMap.EntityComponentMap getSecondaryMemoryMap(SystemController systemController) {
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        return systems.get(systemController.getAssociatedSystem().getSystemName());
-    }
-
-    @Override
-    public boolean hasComponent(Entity entity, SystemController systemController) {
-        return getComponent(entity, systemController) != null;
-    }
-
-    @Override
-    public boolean hasMemoryMap(SystemController systemController) {
-        return getSecondaryMemoryMap(systemController) != null;
+    public MemoryMap.EntityComponentMap getMemoryMap(SystemController systemController) {
+        Validator.validate(systemController, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        return systems.get(systemController.getId().getId());
     }
 
     @Override
     public void register(SystemController systemController, MemoryMap.EntityComponentMap memoryMap) {
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        Validator.validate(memoryMap, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
-        systems.put(systemController.getAssociatedSystem().getSystemName(), memoryMap);
+        Validator.validate(systemController, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        Validator.validate(memoryMap, Validator.Message.INVALID_ASSOCIATED_ENTITY_COMPONENT_MAP);
+        systems.put(systemController.getId().getId(), memoryMap);
     }
 
     @Override
     public void unregister(SystemController systemController) {
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        systems.remove(systemController.getAssociatedSystem().getSystemName());
+        Validator.validate(systemController, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        systems.remove(systemController.getId().getId());
     }
 
     @Override
     public void register(Entity entity, Component component, SystemController systemController) {
-        Validator.validate(component, Validator.Message.COMPONENT_NOT_FOUND);
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        getSecondaryMemoryMap(systemController).put(entity.getId().intValue(), component);
+        Validator.validate(component, Validator.Message.INVALID_COMPONENT);
+        Validator.validate(entity, Validator.Message.INVALID_ENTITY);
+        Validator.validate(systemController, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        getMemoryMap(systemController).put(entity.getId().longValue(), component);
     }
 
     @Override
     public void unregister(Entity entity, SystemController systemController) {
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
-        Validator.validate(systemController, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        getSecondaryMemoryMap(systemController).remove(entity.getId().intValue());
+        Validator.validate(entity, Validator.Message.INVALID_ENTITY);
+        Validator.validate(systemController, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        getMemoryMap(systemController).remove(entity.getId().longValue());
     }
 
+    /**
+     * Registers a data-pipe object as an intruder of the
+     * data-flow pattern among system controllers.
+     *
+     * @param dataPipe the data pipe object (not null).
+     * @param <T> the type of the algorithm return
+     * @param <A> the type of the algorithm parameter
+     */
     public <T, A> void registerDataPipe(DataPipe<T, A> dataPipe) {
         registerDataPipe(dataPipe.getId(), dataPipe);
     }
 
+    /**
+     * Registers a data-pipe object using an external identifier.
+     *
+     * @param id the identifier to use (not null).
+     * @param dataPipe the data pipe object (not null).
+     * @param <T> the type of the algorithm return.
+     * @param <A> the type of the algorithm parameter.
+     */
     public <T, A> void registerDataPipe(Component.Id id, DataPipe<T, A> dataPipe) {
-        Validator.validate(dataPipe, Validator.Message.DATA_PIPE_NOT_FOUND);
-        dataPipeMap.put(id.intValue(), dataPipe);
+        Validator.validate(id, Validator.Message.INVALID_ID);
+        Validator.validate(dataPipe, Validator.Message.INVALID_DATA_PIPE);
+        dataPipeMap.put(id.longValue(), dataPipe);
     }
 
+    /**
+     * Registers a data-pipe object using the object identifier.
+     *
+     * @param dataPipe the data pipe object (not null).
+     * @param <T> the type of the algorithm return.
+     * @param <A> the type of the algorithm parameter.
+     */
     public <T, A> void unregisterDataPipe(DataPipe<T, A> dataPipe) {
-        Validator.validate(dataPipe, Validator.Message.DATA_PIPE_NOT_FOUND);
+        Validator.validate(dataPipe, Validator.Message.INVALID_DATA_PIPE);
         unregisterDataPipe(dataPipe.getId());
     }
 
+    /**
+     * Registers a data-pipe object using an external identifier.
+     *
+     * @param id the identifier to use.
+     */
     public void unregisterDataPipe(Component.Id id) {
-        dataPipeMap.remove(id.intValue());
+        dataPipeMap.remove(id.longValue());
     }
 
+    /**
+     * Retrieves a data-pipe object using an external identifier.
+     *
+     * @param id the identifier to use.
+     * @param <T> the type of the algorithm return.
+     * @param <A> the type of the algorithm parameter.
+     * @return the data-pipe object (not null).
+     */
     public <T, A> DataPipe<T, A> getDataPipe(Component.Id id) {
-        Validator.validate(id, Validator.Message.ID_NOT_FOUND);
-        return (DataPipe<T, A>) dataPipeMap.get(id.intValue());
+        Validator.validate(id, Validator.Message.INVALID_ID);
+        return (DataPipe<T, A>) dataPipeMap.get(id.longValue());
     }
 
     public boolean hasDataPipe(Component.Id id) {
@@ -170,7 +224,7 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     }
 
     public boolean hasSystemComponents(SystemController systemController) {
-        return getSecondaryMemoryMap(systemController) != null;
+        return getMemoryMap(systemController) != null;
     }
 
     public boolean hasEntityComponent(SystemController systemController, Entity entity) {
@@ -184,20 +238,20 @@ public class EntityComponentManager<I> implements SystemManager<MemoryMap.System
     }
 
     public void updateSystems(SystemsUpdater<I> updater, I input) {
-        Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
+        Validator.validate(updater, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
         updater.update(systems, this, input);
     }
 
     public void updateSystemComponents(SystemEntitiesUpdater<I> updater, I input) {
-        Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        MemoryMap.EntityComponentMap components = systems.get(updater.getAssociatedSystem().getSystemName());
-        Validator.validate(components, Validator.Message.ASSOCIATED_ENTITY_COMPONENT_MAP_NOT_FOUND);
+        Validator.validate(updater, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        MemoryMap.EntityComponentMap components = systems.get(updater.getId().getId());
+        Validator.validate(components, Validator.Message.INVALID_ASSOCIATED_ENTITY_COMPONENT_MAP);
         updater.update(components, this, input);
     }
 
     public void updateEntityComponents(ComponentUpdater<I> updater, Entity entity, I input) {
-        Validator.validate(updater, Validator.Message.ASSOCIATED_SYSTEM_NOT_FOUND);
-        Validator.validate(entity, Validator.Message.ENTITY_NOT_FOUND);
+        Validator.validate(updater, Validator.Message.INVALID_ASSOCIATED_SYSTEM);
+        Validator.validate(entity, Validator.Message.INVALID_ENTITY);
         // do a realtime manipulation every time, Big-O notation of (n), linear CPU clock cycles
         final MemoryMap.SystemComponentMap components = new MemoryMap.SystemComponentMap();
         systems.forEach((associatedSystem, entityComponentMap) ->

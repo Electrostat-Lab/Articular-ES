@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,7 +35,6 @@ import articular.core.component.Component;
 import articular.core.system.data.DataPipe;
 import articular.core.system.manager.EntityComponentManager;
 import articular.util.Validatable;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -64,12 +63,21 @@ public interface MemoryMap extends Validatable {
     final class EntityComponentMap extends ConcurrentHashMap<Number, Component> implements MemoryMap {
     }
 
+    /**
+     * TODO
+     */
     final class SystemComponentMap extends ConcurrentHashMap<String, Component> implements MemoryMap {
     }
 
+    /**
+     * TODO
+     */
     final class CacheMap extends ConcurrentHashMap<Number, SystemComponentMap> implements MemoryMap {
     }
 
+    /**
+     * TODO
+     */
     final class DataPipeMap extends ConcurrentHashMap<Number, DataPipe<?, ?>> implements MemoryMap {
     }
 }

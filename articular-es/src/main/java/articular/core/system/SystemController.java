@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,23 +31,31 @@
 
 package articular.core.system;
 
-import articular.util.Validatable;
+import articular.util.Identifiable;
 
 /**
- * The base system interface that provides different
+ * The base system-controller interface that provides different
  * types of interactions.
+ *
+ * <p>
+ * The controller interface is a handler interface that associates
+ * an {@link ArticularSystem} to be used as an identifier provider in the
+ * low-level memory-mapping operations; thus systems in articular-es is
+ * a virtual analogy.
+ * </p>
  *
  * @author pavl_g
  * @see ComponentUpdater for an entity component-component interactions in a single system
  * @see SystemsUpdater for system-system interactions
  * @see SystemEntitiesUpdater for entity-entity interactions in a single system
  */
-public interface SystemController extends Validatable {
+public interface SystemController extends Identifiable<ArticularSystem> {
 
     /**
-     * Retrieves the name of the associated system.
+     * Retrieves the associated system.
      *
-     * @return the name in string format
+     * @return the associated system object.
      */
-    ArticularSystem getAssociatedSystem();
+    @Override
+    ArticularSystem getId();
 }

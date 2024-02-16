@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,17 +28,26 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package articular.util;
 
 /**
  * Provides an object that can be identified by its unique identifier.
+ *
  * <p>
  * Use the hashing spread methods to generate a unique identifier for this
  * object, for example: (hashCode() >>> (Integer.SIZE/2)) ^ hashCode().
  * </p>
  *
- * @param <T>
+ * @param <T> the type of the identifier.
+ * @author pavl_g
  */
 public interface Identifiable<T> extends Validatable {
+
+    /**
+     * Retrieves the identifier for this object.
+     *
+     * @return the identifier object.
+     */
     T getId();
 }

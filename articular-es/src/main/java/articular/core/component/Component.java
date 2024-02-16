@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2023, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,16 +31,23 @@
 
 package articular.core.component;
 
-import articular.core.Entity;
 import articular.util.Identifiable;
 import articular.util.Validatable;
-
 import java.lang.reflect.Field;
 
 /**
- * A template representing a Game {@link Entity} housing data objects.
+ * A template representing a game component, components are data-only
+ * figures, they can be grouped under a single entity.
+ *
+ * <p>
+ * When utilizing components, there should be a valid relevant
+ * relationship between the registered component and the system environment.
+ * </p>
  *
  * @author pavl_g
+ * @see articular.core.Entity
+ * @see System
+ * @see Module
  */
 @SuppressWarnings("unchecked")
 public interface Component extends Identifiable<Component.Id> {
@@ -48,20 +55,21 @@ public interface Component extends Identifiable<Component.Id> {
     /**
      * Retrieves all the declared fields in an array of {@link Field}.
      *
-     * @return the data fields of this component wrapped in an array of Field pointers
+     * @return the data fields of this component wrapped in an array of Field pointers.
      */
     default Field[] getData() {
         return getClass().getDeclaredFields();
     }
 
     /**
-     * Retrieves a data field by its name in a field pointer.
+     * Retrieves a data field by its name from a data-field pointer.
      *
-     * @param <T> the type of the component object data in memory
-     * @param fieldName the field name in the component class
-     * @return a reference object to the required field
-     * @throws NoSuchFieldException if the submitted field is not found in this component
+     * @param <T>       the type of the component object data in memory.
+     * @param fieldName the field name in the component class.
+     * @return a reference object to the required field (nullable).
+     * @throws NoSuchFieldException   if the submitted field is not found in this component.
      * @throws IllegalAccessException if the field is inaccessible by means of private access modifiers
+     *                                (internally suppressed).
      */
     default <T> T getData(String fieldName) throws NoSuchFieldException, IllegalAccessException {
         final Field data = getClass().getDeclaredField(fieldName);
@@ -77,43 +85,43 @@ public interface Component extends Identifiable<Component.Id> {
      * a constant long value to accommodate larger number of game entity components.
      */
     final class Id extends Number implements Validatable {
-        private final int id;
+        private final long id;
 
         /**
          * Instantiates a game entity component identifier object.
          *
          * @param id the identifier in long format
          */
-        public Id(final int id) {
+        public Id(final long id) {
             this.id = id;
+        }
+
+        @Deprecated
+        @Override
+        public int intValue() {
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#longValue()\"");
         }
 
         /**
          * Retrieves the identifier in a long format.
          *
-         * @return the component identifier in longs
+         * @return the component identifier in longs.
          */
         @Override
-        public int intValue() {
+        public long longValue() {
             return id;
         }
 
         @Deprecated
         @Override
-        public long longValue() {
-            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
-        }
-
-        @Deprecated
-        @Override
         public float floatValue() {
-            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#longValue()\"");
         }
 
         @Deprecated
         @Override
         public double doubleValue() {
-            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#intValue()\"");
+            throw new UnsupportedOperationException("Deprecated call, use \"Component.Id#longValue()\"");
         }
     }
 }

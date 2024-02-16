@@ -1,7 +1,7 @@
 /*
  * BSD 3-Clause License
  *
- * Copyright (c) 2024, Articular-ES, The AvrSandbox Project
+ * Copyright (c) 2023-2024, Articular-ES, The AvrSandbox Project
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,5 +31,15 @@
 
 package articular.util;
 
+/**
+ * A Marker interface specifying the
+ * substrate (or base) object for this API.
+ *
+ * <p>
+ * All objects should implement this interface.
+ * </p>
+ *
+ * @author pavl_g
+ */
 public interface Validatable {
 }
